@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "E4whIYxTzRV47WeY13iDiWa56FldnBZGn8BsD9dm+/A=",
+  "Source": "ActivityRegistrator.API",
+  "BasePath": "_content/ActivityRegistrator.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

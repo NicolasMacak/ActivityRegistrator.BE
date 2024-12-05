@@ -1,0 +1,12 @@
+C:\Users\macak\source\repos\ActivityRegistrator.API\ActivityRegistrator.Models\bin\Debug\net8.0\ActivityRegistrator.Models.deps.json
+C:\Users\macak\source\repos\ActivityRegistrator.API\ActivityRegistrator.Models\bin\Debug\net8.0\ActivityRegistrator.Models.dll
+C:\Users\macak\source\repos\ActivityRegistrator.API\ActivityRegistrator.Models\bin\Debug\net8.0\ActivityRegistrator.Models.pdb
+C:\Users\macak\source\repos\ActivityRegistrator.API\ActivityRegistrator.Models\obj\Debug\net8.0\ActivityRegistrator.Models.csproj.AssemblyReference.cache
+C:\Users\macak\source\repos\ActivityRegistrator.API\ActivityRegistrator.Models\obj\Debug\net8.0\ActivityRegistrator.Models.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\macak\source\repos\ActivityRegistrator.API\ActivityRegistrator.Models\obj\Debug\net8.0\ActivityRegistrator.Models.AssemblyInfoInputs.cache
+C:\Users\macak\source\repos\ActivityRegistrator.API\ActivityRegistrator.Models\obj\Debug\net8.0\ActivityRegistrator.Models.AssemblyInfo.cs
+C:\Users\macak\source\repos\ActivityRegistrator.API\ActivityRegistrator.Models\obj\Debug\net8.0\ActivityRegistrator.Models.csproj.CoreCompileInputs.cache
+C:\Users\macak\source\repos\ActivityRegistrator.API\ActivityRegistrator.Models\obj\Debug\net8.0\ActivityRegistrator.Models.dll
+C:\Users\macak\source\repos\ActivityRegistrator.API\ActivityRegistrator.Models\obj\Debug\net8.0\refint\ActivityRegistrator.Models.dll
+C:\Users\macak\source\repos\ActivityRegistrator.API\ActivityRegistrator.Models\obj\Debug\net8.0\ActivityRegistrator.Models.pdb
+C:\Users\macak\source\repos\ActivityRegistrator.API\ActivityRegistrator.Models\obj\Debug\net8.0\ref\ActivityRegistrator.Models.dll
