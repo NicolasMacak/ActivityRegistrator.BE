@@ -1,5 +1,5 @@
 # Activity Registrator
-This is the backend project. Frontend is here [ActivityRegisrator.API](https://github.com/NicolasMacak/ActivityRegistrator.FE)
+This is the backend project. Frontend is here [ActivityRegisrator.FE](https://github.com/NicolasMacak/ActivityRegistrator.FE)
 
 ## Overview
 
