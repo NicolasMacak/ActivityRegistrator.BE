@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Core\Request\" />
     <Folder Include="Service\" />
   </ItemGroup>
 

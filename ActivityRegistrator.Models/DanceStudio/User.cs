@@ -2,7 +2,7 @@
 using Azure.Data.Tables;
 
 namespace ActivityRegistrator.Models.DanceStudio;
-public class Person : ITableEntity
+public class User : ITableEntity
 {   
     public string PartitionKey { get; set; } = string.Empty;
     public string RowKey {  get; set; } = string.Empty;

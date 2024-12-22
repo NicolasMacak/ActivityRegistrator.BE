@@ -2,6 +2,7 @@ using Microsoft.Extensions.Azure;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Azure;
+using ActivityRegistrator.API.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,9 +13,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddTransient<UserRepository>();
+
 builder.Services.AddAzureClients(async clientBuilder =>
 {
-
     if (builder.Environment.IsDevelopment())
     {
         string? connectionString = builder.Configuration.GetValue<string>("ConnectionStrings:LocalDevStorage");
