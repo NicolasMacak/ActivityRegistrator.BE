@@ -4,7 +4,7 @@ namespace ActivityRegistrator.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class EnvironmentController : ControllerBase
+public class TenantController : ControllerBase
 {
     [HttpPost]
     public async Task CreateEnviroment()

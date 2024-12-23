@@ -1,4 +1,4 @@
-﻿namespace ActivityRegistrator.API.Core.Response;
+﻿namespace ActivityRegistrator.Models.Response;
 public class ResponseDto<T>
 {
     public T? Value { get; set; }

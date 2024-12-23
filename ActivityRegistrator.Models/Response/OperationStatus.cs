@@ -1,4 +1,4 @@
-﻿namespace ActivityRegistrator.API.Core.Response;
+﻿namespace ActivityRegistrator.Models.Response;
 public enum OperationStatus
 {
     Success,

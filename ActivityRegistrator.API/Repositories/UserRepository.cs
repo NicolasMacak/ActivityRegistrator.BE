@@ -1,11 +1,13 @@
 ﻿using ActivityRegistrator.API.Core.Repositories;
-using ActivityRegistrator.Models.DanceStudio;
+using ActivityRegistrator.Models.Entities;
 using Azure.Data.Tables;
 
 namespace ActivityRegistrator.API.Repositories;
-public class UserRepository : GenericRepository<User>
+public class UserRepository : GenericRepository<UserEntity>
 {
-    public UserRepository(ILogger<GenericRepository<User>> logger, TableServiceClient tableServiceClient) : base(logger, tableServiceClient)
+    private const string TableName = "Users";
+
+    public UserRepository(ILogger<GenericRepository<UserEntity>> logger, TableServiceClient tableServiceClient) : base(logger, tableServiceClient, TableName)
     {
     }
 }

@@ -1,47 +1,62 @@
-﻿using ActivityRegistrator.API.Core.Response;
-using ActivityRegistrator.Models.DanceStudio;
+﻿using System.Net;
+using ActivityRegistrator.Models.Entities;
+using ActivityRegistrator.Models.Response;
+using Azure;
 using Azure.Data.Tables;
 
 namespace ActivityRegistrator.API.Core.Repositories;
 public class GenericRepository<Entity> where Entity : class, ITableEntity
 {
+    private readonly string _tableName;
+
     private readonly ILogger<GenericRepository<Entity>> _logger;
     private readonly TableServiceClient _tableServiceClient;
 
-    public GenericRepository(ILogger<GenericRepository<Entity>> logger, TableServiceClient tableServiceClient)
+    public GenericRepository(ILogger<GenericRepository<Entity>> logger, TableServiceClient tableServiceClient, string tableName)
     {
         _logger = logger;
         _tableServiceClient = tableServiceClient;
+        _tableName = tableName;
     }
 
     public async Task<ResponseDtoList<Entity>> GetList(string tenantCode)
     {
-        TableClient tableClient = _tableServiceClient.GetTableClient(tenantCode);
+        TableClient tableClient = _tableServiceClient.GetTableClient(_tableName);
         List<Entity> result = tableClient
-            .Query<Entity>()
+            .Query<Entity>(x => x.PartitionKey == tenantCode)
             .ToList();
 
         return new ResponseDtoList<Entity>().With(result);
     }
 
-    public async Task<ResponseDto<Entity>> GetByPartitionKey(string tableName, string partitionKey)
+    public async Task<ResponseDto<Entity>> Get(string partitionKey, string rowKey)
     {
         ResponseDto<Entity> response = new();
 
-        TableClient tableClient = _tableServiceClient.GetTableClient(tableName);
-        Entity? result = tableClient.Query<Entity>(x => x.PartitionKey == partitionKey).FirstOrDefault();
+        TableClient tableClient = _tableServiceClient.GetTableClient(_tableName);
 
-        if(result == null)
+        try
         {
-            return response.With(OperationStatus.NotFound);
+            Entity? result = tableClient.GetEntity<Entity>(partitionKey, rowKey);
+            return response.With(result);
         }
-
-        return response.With(result);
+        catch (RequestFailedException requestFailedException)
+        {
+            if(requestFailedException.Status == (int)HttpStatusCode.NotFound)
+            {
+                return response.With(OperationStatus.NotFound);
+            }
+            throw;
+        }
+        catch (Exception exception)
+        {
+            throw;
+        }
     }
 
-    public async Task<ResponseDto<Entity>> Create(string tableName, Entity entity)
+    public async Task<ResponseDto<Entity>> Create(Entity entity)
     {
-        TableClient tableClient = _tableServiceClient.GetTableClient(tableName);
+        TableClient tableClient = _tableServiceClient.GetTableClient(_tableName);
         ResponseDto<Entity> response = new();
 
         try
@@ -56,14 +71,13 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
         }
     }
 
-    public async Task<ResponseDto<Entity>> Update(string tableName, string partitionKey, Entity entity)
+    public async Task<ResponseDto<Entity>> Update(string partitionKey, Entity entity)
     {
-        TableClient tableClient = _tableServiceClient.GetTableClient(tableName);
+        TableClient tableClient = _tableServiceClient.GetTableClient(_tableName);
         ResponseDto<Entity> response = new();
 
         try
         {
-            // Attempt to update the person in the table
             var existingPerson = tableClient.Query<Entity>(x => x.PartitionKey == partitionKey).FirstOrDefault();
 
             if (existingPerson == null)
@@ -71,8 +85,7 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
                 return response.With(OperationStatus.NotFound);
             }
 
-            // Update the person entity
-            await tableClient.UpdateEntityAsync(entity, entity.ETag); // react if etag was not the same
+            await tableClient.UpdateEntityAsync(entity, entity.ETag); //todo. react if etag was not the same
             return response.With(entity);
         }
         catch (Exception ex)
@@ -82,20 +95,19 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
         }
     }
 
-    public async Task<ResponseDto<Entity>> Delete(string tableName, string id)
+    public async Task<ResponseDto<Entity>> Delete(string id)
     {
-        TableClient tableClient = _tableServiceClient.GetTableClient(tableName);
+        TableClient tableClient = _tableServiceClient.GetTableClient(_tableName);
         ResponseDto<Entity> response = new();
 
         try
         {
-            User? person = tableClient.Query<User>(x => x.PartitionKey == id).FirstOrDefault();
+            UserEntity? person = tableClient.Query<UserEntity>(x => x.PartitionKey == id).FirstOrDefault();
 
             if (person == null)
             {
                 return response.With(OperationStatus.NotFound);
             }
-
             await tableClient.DeleteEntityAsync(person);
 
             return response.With(OperationStatus.Success);
