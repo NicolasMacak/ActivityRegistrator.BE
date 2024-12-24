@@ -4,6 +4,14 @@ public class ResponseDto<T>
     public T? Value { get; set; }
     public OperationStatus Status { get; set; }
 
+    public ResponseDto<T> With(T value, OperationStatus status)
+    {
+        Value = value;
+        Status = status;
+
+        return this;
+    }
+
     public ResponseDto<T> With(T value)
     {
         Value = value;

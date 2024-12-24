@@ -1,7 +1,10 @@
 ﻿using ActivityRegistrator.API.Core;
-using ActivityRegistrator.API.Repositories;
+using ActivityRegistrator.API.Service;
+using ActivityRegistrator.Models.Dtoes;
 using ActivityRegistrator.Models.Entities;
+using ActivityRegistrator.Models.Request;
 using ActivityRegistrator.Models.Response;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ActivityRegistrator.API.Controllers;
@@ -11,89 +14,95 @@ namespace ActivityRegistrator.API.Controllers;
 public class UsersController : ControllerBase
 {
     private readonly ILogger<UsersController> _logger;
-    private readonly UserRepository _userRepository;
+    private readonly UserService _userService;
+    private readonly IMapper _mapper;
 
     private const string TenantCode = "TangoVida";
 
-    public UsersController(ILogger<UsersController> logger, UserRepository userRepository)
+    public UsersController(ILogger<UsersController> logger, UserService userService, IMapper mapper)
     {
-         _logger = logger;
-        _userRepository = userRepository;
+        _logger = logger;
+        _userService = userService;
+        _mapper = mapper;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetList()
     {
-        ResponseDtoList<UserEntity> response = await _userRepository.GetList(TenantCode);
+        ResponseDtoList<UserEntity> response = await _userService.GetList(TenantCode);
 
-        return Ok(new { response.Values, response.Count });
+        IEnumerable<UserDto> records = _mapper.Map<IEnumerable<UserDto>>(response.Values);
+        return Ok(new { records, response.Count });
     }
 
     [HttpGet("{email}")]
     public async Task<IActionResult> Get(string email)
     {
-        ResponseDto<UserEntity> response = await _userRepository.Get(TenantCode, email);
+        ResponseDto<UserEntity> response = await _userService.Get(TenantCode, email);
 
         if(response.Status == OperationStatus.NotFound)
         {
-            _logger.LogError("User not found. tenantCode: {TenantCode}, email: {email}", TenantCode, email);
-            return NotFound(ErrorBuilder.NotFoundError(new Dictionary<string, string>() { { "email", email } }));
+            return NotFound(ErrorBuilder.NotFoundError(new Dictionary<string, object>() {
+                { "email", email }
+            }));
         }
 
-        return Ok(response.Value);
+        return Ok(_mapper.Map<UserDto>(response.Value));
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] UserEntity user)
+    public async Task<IActionResult> Create([FromBody] CreateUserRequestDto requestDto)
     {
-        if (user == null)
+        if (requestDto == null)
         {
-            return BadRequest("Person data cannot be null.");
+            return BadRequest("Person data cannot be null");
         }
 
-        ResponseDto<UserEntity> response = await _userRepository.Create(user);
+        ResponseDto<UserEntity> response = await _userService.Create(TenantCode, requestDto);
 
-        if(response.Status == OperationStatus.Failure)
+        return response.Status switch
         {
-            return StatusCode(500);
-        }
-
-        return Ok(response.Value);
+            OperationStatus.Success => CreatedAtAction(nameof(Create), response),
+            OperationStatus.AlreadyExists => BadRequest(ErrorBuilder.AlreadyExistsError(new Dictionary<string, object>() {
+                                            { "Email", requestDto.Email }
+            })),
+            _ => StatusCode(500)
+        };
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(string id, [FromBody] UserEntity user)
+    [HttpPut("{email}")]
+    public async Task<IActionResult> Update(string email, [FromBody] UpdateUserRequestDto requestDto)
     {
-        if (user == null)
+        if (requestDto == null)
         {
-            return BadRequest("Person data cannot be null.");
+            return BadRequest("User data cannot be null");
         }
 
-        if (id != user.PartitionKey)
+        ResponseDto<UserEntity> response = await _userService.Update(TenantCode, email, requestDto);
+
+        return response.Status switch
         {
-            return BadRequest("ID in URL must match the ID in the body.");
-        }
-
-        ResponseDto<UserEntity> response = await _userRepository.Update(id, user);
-
-        if (response.Status == OperationStatus.Failure) 
-        {
-            return BadRequest();
-        }
-
-        return Ok(response.Value);
+            OperationStatus.Success => Ok(response.Value),
+            OperationStatus.AlreadyUpdated => BadRequest(ErrorBuilder.AlreadyUpdatedError(new Dictionary<string, object>() {
+                                { "RequestETag", requestDto.ETag },
+                                { "DatabaseEntityEtag", response.Value!.ETag }
+            })),
+            _ => StatusCode(500)
+        };
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(string id)
+    [HttpDelete("{email}")]
+    public async Task<IActionResult> Delete(string email)
     {
-        ResponseDto<UserEntity> response = await _userRepository.Delete(id);
+        ResponseDto<UserEntity> response = await _userService.Delete(TenantCode, email);
 
-        if (response.Status == OperationStatus.NotFound)
+        return response.Status switch
         {
-            return NotFound(id); // bachnut dictionary
-        }
-
-        return NoContent();
+            OperationStatus.Success => NoContent(),
+            OperationStatus.NotFound => NotFound(ErrorBuilder.NotFoundError(new Dictionary<string, object>() {
+                                { "Email", email }
+            })),
+            _ => StatusCode(500)
+        };
     }
 }

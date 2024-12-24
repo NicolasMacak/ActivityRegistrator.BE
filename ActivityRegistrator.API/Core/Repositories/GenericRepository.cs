@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using ActivityRegistrator.Models.Entities;
 using ActivityRegistrator.Models.Response;
 using Azure;
 using Azure.Data.Tables;
@@ -7,22 +6,18 @@ using Azure.Data.Tables;
 namespace ActivityRegistrator.API.Core.Repositories;
 public class GenericRepository<Entity> where Entity : class, ITableEntity
 {
-    private readonly string _tableName;
-
     private readonly ILogger<GenericRepository<Entity>> _logger;
-    private readonly TableServiceClient _tableServiceClient;
+    private readonly TableClient _tableClient;
 
     public GenericRepository(ILogger<GenericRepository<Entity>> logger, TableServiceClient tableServiceClient, string tableName)
     {
         _logger = logger;
-        _tableServiceClient = tableServiceClient;
-        _tableName = tableName;
+        _tableClient = tableServiceClient.GetTableClient(tableName);
     }
 
     public async Task<ResponseDtoList<Entity>> GetList(string tenantCode)
     {
-        TableClient tableClient = _tableServiceClient.GetTableClient(_tableName);
-        List<Entity> result = tableClient
+        List<Entity> result = _tableClient
             .Query<Entity>(x => x.PartitionKey == tenantCode)
             .ToList();
 
@@ -33,35 +28,32 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
     {
         ResponseDto<Entity> response = new();
 
-        TableClient tableClient = _tableServiceClient.GetTableClient(_tableName);
-
         try
         {
-            Entity? result = tableClient.GetEntity<Entity>(partitionKey, rowKey);
+            Entity? result = _tableClient.GetEntity<Entity>(partitionKey, rowKey);
             return response.With(result);
         }
         catch (RequestFailedException requestFailedException)
         {
             if(requestFailedException.Status == (int)HttpStatusCode.NotFound)
             {
+                _logger.LogError("User not found. tenantCode: {TenantCode}, email: {email}", partitionKey, rowKey);
                 return response.With(OperationStatus.NotFound);
             }
             throw;
         }
-        catch (Exception exception)
-        {
+        catch{
             throw;
         }
     }
 
     public async Task<ResponseDto<Entity>> Create(Entity entity)
     {
-        TableClient tableClient = _tableServiceClient.GetTableClient(_tableName);
         ResponseDto<Entity> response = new();
 
         try
         {
-            await tableClient.AddEntityAsync(entity);
+            await _tableClient.AddEntityAsync(entity);
             return response.With(entity);
         }
         catch (Exception ex)
@@ -71,22 +63,25 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
         }
     }
 
-    public async Task<ResponseDto<Entity>> Update(string partitionKey, Entity entity)
+    public async Task<ResponseDto<Entity>> Update(string partitionKey, ETag tag, Entity entity)
     {
-        TableClient tableClient = _tableServiceClient.GetTableClient(_tableName);
         ResponseDto<Entity> response = new();
 
         try
         {
-            var existingPerson = tableClient.Query<Entity>(x => x.PartitionKey == partitionKey).FirstOrDefault();
-
-            if (existingPerson == null)
+            await _tableClient.UpdateEntityAsync(entity, tag);
+            return response.With(entity);
+        }
+        catch (RequestFailedException requestFailedException)
+        {
+            if (requestFailedException.Status == (int)HttpStatusCode.PreconditionFailed)
             {
-                return response.With(OperationStatus.NotFound);
+                _logger.LogError(requestFailedException, "Record was already updates. partitionKey: {partitionKey}, rowkey: {rowKey}, requestEtag: {requestEtag}, entityEtag: {entityEtag}", entity.PartitionKey, entity.RowKey, tag, entity.ETag);
+                return response.With(entity, OperationStatus.AlreadyUpdated);
             }
 
-            await tableClient.UpdateEntityAsync(entity, entity.ETag); //todo. react if etag was not the same
-            return response.With(entity);
+            _logger.LogError(requestFailedException, "Database request failed");
+            throw;
         }
         catch (Exception ex)
         {
@@ -95,21 +90,13 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
         }
     }
 
-    public async Task<ResponseDto<Entity>> Delete(string id)
+    public async Task<ResponseDto<Entity>> Delete(Entity entityToDelete)
     {
-        TableClient tableClient = _tableServiceClient.GetTableClient(_tableName);
         ResponseDto<Entity> response = new();
 
         try
         {
-            UserEntity? person = tableClient.Query<UserEntity>(x => x.PartitionKey == id).FirstOrDefault();
-
-            if (person == null)
-            {
-                return response.With(OperationStatus.NotFound);
-            }
-            await tableClient.DeleteEntityAsync(person);
-
+            await _tableClient.DeleteEntityAsync(entityToDelete);
             return response.With(OperationStatus.Success);
         }
         catch (Exception ex)

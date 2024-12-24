@@ -1,26 +1,24 @@
 using Microsoft.Extensions.Azure;
-using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
-using Azure;
 using ActivityRegistrator.API.Repositories;
 using ActivityRegistrator.API.Core.Extensions;
+using ActivityRegistrator.API.Service;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddTransient<UserRepository>();
+builder.Services.AddTransient<UserService>();
 
 builder.AddAzureClients();
+builder.AddAutoMapper();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

@@ -1,4 +1,9 @@
-﻿using Microsoft.Extensions.Azure;
+﻿using ActivityRegistrator.Models.Dtoes;
+using ActivityRegistrator.Models.Entities;
+using ActivityRegistrator.Models.MappingProfiles;
+using AutoMapper;
+using Azure;
+using Microsoft.Extensions.Azure;
 
 namespace ActivityRegistrator.API.Core.Extensions;
 public static class WebApplicationBuilderExtensions
@@ -39,5 +44,16 @@ public static class WebApplicationBuilderExtensions
 
             // store credentials niekde safe
         });
+    }
+
+    public static void AddAutoMapper(this WebApplicationBuilder builder)
+    {
+        MapperConfiguration configuration = new MapperConfiguration(cfg => {
+            cfg.AddProfile<UserProfile>(); 
+            } 
+        );
+
+        IMapper autoMapper = configuration.CreateMapper();
+        builder.Services.AddSingleton(autoMapper);
     }
 }
