@@ -2,7 +2,6 @@ using Microsoft.Extensions.Azure;
 using ActivityRegistrator.API.Repositories;
 using ActivityRegistrator.API.Core.Extensions;
 using ActivityRegistrator.API.Service;
-using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 

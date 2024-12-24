@@ -31,6 +31,11 @@ public class UsersController : ControllerBase
     {
         ResponseDtoList<UserEntity> response = await _userService.GetList(TenantCode);
 
+        if(response.Status != OperationStatus.Success)
+        {
+            return StatusCode(500);
+        }
+
         IEnumerable<UserDto> records = _mapper.Map<IEnumerable<UserDto>>(response.Values);
         return Ok(new { records, response.Count });
     }
