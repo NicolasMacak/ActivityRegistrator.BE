@@ -3,7 +3,7 @@ using ActivityRegistrator.Models.Entities;
 using Azure.Data.Tables;
 
 namespace ActivityRegistrator.API.Repositories;
-public class UserRepository : GenericRepository<UserEntity>
+public class UserRepository : GenericRepository<UserEntity>, IUserRepository
 {
     private const string TableName = "Users";
 

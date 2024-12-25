@@ -4,35 +4,35 @@ using ActivityRegistrator.API.Repositories;
 using ActivityRegistrator.Models.Request;
 
 namespace ActivityRegistrator.API.Service;
-public class UserService
+public class UserService : IUserService
 {
     private readonly ILogger<UserService> _logger;
-    private readonly UserRepository _userRepository;
+    private readonly IUserRepository _userRepository;
 
-    public UserService(ILogger<UserService> logger, UserRepository userRepository)
+    public UserService(ILogger<UserService> logger, IUserRepository userRepository)
     {
         _logger = logger;
         _userRepository = userRepository;
     }
 
-    public async Task<ResponseDtoList<UserEntity>> GetList(string tenantCode)
+    public async Task<ResultListWrapper<UserEntity>> GetListAsync(string tenantCode)
     {
-        return await _userRepository.GetList(tenantCode);
+        return await _userRepository.GetListAsync(tenantCode);
     }
 
-    public async Task<ResponseDto<UserEntity>> Get(string tenantCode, string email)
+    public async Task<ResultWrapper<UserEntity>> GetAsync(string tenantCode, string email)
     {
         return await _userRepository.Get(tenantCode, email);
     }
 
-    public async Task<ResponseDto<UserEntity>> Create(string tenantCode, CreateUserRequestDto requestDto)
+    public async Task<ResultWrapper<UserEntity>> CreateAsync(string tenantCode, CreateUserRequestDto requestDto)
     {
-        ResponseDto<UserEntity> responseOfEntityToUpdate = await _userRepository.Get(tenantCode, requestDto.Email);
+        ResultWrapper<UserEntity> responseOfEntityToUpdate = await _userRepository.Get(tenantCode, requestDto.Email);
 
         if(responseOfEntityToUpdate.Status == OperationStatus.Success)
         {
             _logger.LogError("Such resource already exists. request: {requestDto}", requestDto.ToString());
-            return new ResponseDto<UserEntity>().With(OperationStatus.AlreadyExists);
+            return new ResultWrapper<UserEntity>().With(OperationStatus.UniqueConstraintViolation);
         }
 
         UserEntity newUserEntity = new()
@@ -45,9 +45,9 @@ public class UserService
         return await _userRepository.Create(newUserEntity);
     }
 
-    public async Task<ResponseDto<UserEntity>> Update(string tenantCode, string email, UpdateUserRequestDto request)
+    public async Task<ResultWrapper<UserEntity>> UpdateAsync(string tenantCode, string email, UpdateUserRequestDto request)
     {
-        ResponseDto<UserEntity> responseOfEntityToUpdate = await _userRepository.Get(tenantCode, email);
+        ResultWrapper<UserEntity> responseOfEntityToUpdate = await _userRepository.Get(tenantCode, email);
 
         if(responseOfEntityToUpdate.Status != OperationStatus.Success)
         {
@@ -61,12 +61,12 @@ public class UserService
         return await _userRepository.Update(email, request.ETag, entityToUpdate);
     }
 
-    public async Task<ResponseDto<UserEntity>> Delete(string tenantCode, string email)
+    public async Task<ResultWrapper<UserEntity>> DeleteAsync(string tenantCode, string email)
     {
-        ResponseDto<UserEntity> entityToDeleteResponse = await _userRepository.Get(tenantCode, email);
+        ResultWrapper<UserEntity> entityToDeleteResponse = await _userRepository.Get(tenantCode, email);
         if (entityToDeleteResponse.Status != OperationStatus.Success)
         {
-            return new ResponseDto<UserEntity>().With(OperationStatus.NotFound);
+            return new ResultWrapper<UserEntity>().With(OperationStatus.NotFound);
         }
 
         return await _userRepository.Delete(entityToDeleteResponse.Value!);

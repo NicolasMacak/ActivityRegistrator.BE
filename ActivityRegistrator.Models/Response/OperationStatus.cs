@@ -4,6 +4,6 @@ public enum OperationStatus
     Success,
     Failure,
     NotFound,
-    AlreadyExists,
+    UniqueConstraintViolation,
     AlreadyUpdated
 }

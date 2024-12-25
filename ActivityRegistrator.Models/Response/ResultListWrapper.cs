@@ -1,5 +1,5 @@
 ﻿namespace ActivityRegistrator.Models.Response;
-public class ResponseDtoList<T>
+public class ResultListWrapper<T>
 {
     public List<T>? Values { get; set; }
     public OperationStatus Status { get; set; }
@@ -8,7 +8,7 @@ public class ResponseDtoList<T>
     /// <summary>
     /// Successful operation
     /// </summary>
-    public ResponseDtoList<T> With(List<T> values)
+    public ResultListWrapper<T> With(List<T> values)
     {
         Values = values;
         Status = OperationStatus.Success;
@@ -20,7 +20,7 @@ public class ResponseDtoList<T>
     /// <summary>
     /// Unsucessful operation
     /// </summary>
-    public ResponseDtoList<T> With(OperationStatus status)
+    public ResultListWrapper<T> With(OperationStatus status)
     {
         Status = Status;
 

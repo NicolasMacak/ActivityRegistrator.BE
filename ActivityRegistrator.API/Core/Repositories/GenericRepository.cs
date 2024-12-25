@@ -15,18 +15,18 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
         _tableClient = tableServiceClient.GetTableClient(tableName);
     }
 
-    public async Task<ResponseDtoList<Entity>> GetList(string tenantCode)
+    public async Task<ResultListWrapper<Entity>> GetListAsync(string tenantCode)
     {
         List<Entity> result = _tableClient
             .Query<Entity>(x => x.PartitionKey == tenantCode)
             .ToList();
 
-        return new ResponseDtoList<Entity>().With(result);
+        return new ResultListWrapper<Entity>().With(result);
     }
 
-    public async Task<ResponseDto<Entity>> Get(string partitionKey, string rowKey)
+    public async Task<ResultWrapper<Entity>> Get(string partitionKey, string rowKey)
     {
-        ResponseDto<Entity> response = new();
+        ResultWrapper<Entity> response = new();
 
         try
         {
@@ -47,9 +47,9 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
         }
     }
 
-    public async Task<ResponseDto<Entity>> Create(Entity entity)
+    public async Task<ResultWrapper<Entity>> Create(Entity entity)
     {
-        ResponseDto<Entity> response = new();
+        ResultWrapper<Entity> response = new();
 
         try
         {
@@ -58,14 +58,14 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while creating a new person.");
+            _logger.LogError(ex, "An error occurred while creating a new user");
             return response.With(OperationStatus.Failure);
         }
     }
 
-    public async Task<ResponseDto<Entity>> Update(string partitionKey, ETag tag, Entity entity)
+    public async Task<ResultWrapper<Entity>> Update(string partitionKey, ETag tag, Entity entity)
     {
-        ResponseDto<Entity> response = new();
+        ResultWrapper<Entity> response = new();
 
         try
         {
@@ -80,19 +80,19 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
                 return response.With(entity, OperationStatus.AlreadyUpdated);
             }
 
-            _logger.LogError(requestFailedException, "Database request failed");
-            throw;
+            _logger.LogError(requestFailedException, "An error occurred while updating the user");
+            return response.With(OperationStatus.Failure);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while updating the person.");
+            _logger.LogError(ex, "An error occurred while updating the user");
             return response.With(OperationStatus.Failure);
         }
     }
 
-    public async Task<ResponseDto<Entity>> Delete(Entity entityToDelete)
+    public async Task<ResultWrapper<Entity>> Delete(Entity entityToDelete)
     {
-        ResponseDto<Entity> response = new();
+        ResultWrapper<Entity> response = new();
 
         try
         {
@@ -101,7 +101,7 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while deleting the person.");
+            _logger.LogError(ex, "An error occurred while deleting the user");
             return response.With(OperationStatus.Failure);
         }
     }

@@ -10,8 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddTransient<UserRepository>();
-builder.Services.AddTransient<UserService>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IUserService, UserService>();
 
 builder.AddAzureClients();
 builder.AddAutoMapper();
