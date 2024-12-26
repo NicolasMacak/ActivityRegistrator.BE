@@ -1,11 +1,14 @@
-﻿using ActivityRegistrator.API.Core;
+﻿using System.Net;
+using ActivityRegistrator.API.Core;
 using ActivityRegistrator.API.Service;
 using ActivityRegistrator.Models.Dtoes;
 using ActivityRegistrator.Models.Entities;
+using ActivityRegistrator.Models.ObjectResults;
 using ActivityRegistrator.Models.Request;
 using ActivityRegistrator.Models.Response;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using static ActivityRegistrator.API.Core.ObjectResultBuilder;
 
 namespace ActivityRegistrator.API.Controllers;
 
@@ -42,24 +45,24 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{email}")]
-    public async Task<IActionResult> Get(string email)
+    public async Task<IActionResult> GetAsync(string email)
     {
         ResultWrapper<UserEntity> response = await _userService.GetAsync(TenantCode, email);
 
-        if(response.Status == OperationStatus.NotFound)
+        return response.Status switch
         {
-            return NotFound(ErrorBuilder.NotFoundError(new Dictionary<string, object>() {
+            OperationStatus.Success => Ok(_mapper.Map<UserDto>(response.Value)),
+            OperationStatus.NotFound => NotFound(ErrorBuilder.NotFoundError(new Dictionary<string, object>() {
                 { "email", email }
-            }));
-        }
-
-        return Ok(_mapper.Map<UserDto>(response.Value));
+            })),
+            _ => StatusCode(500)
+        };
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateUserRequestDto requestDto)
+    public async Task<IActionResult> CreateAsync([FromBody] CreateUserRequestDto requestDto)
     {
-        if (requestDto == null)
+        if (requestDto == null) // todo. later returned by fluent validation
         {
             return BadRequest("Person data cannot be null");
         }
@@ -68,16 +71,17 @@ public class UsersController : ControllerBase
 
         return response.Status switch
         {
-            OperationStatus.Success => CreatedAtAction(nameof(Create), response),
-            OperationStatus.UniqueConstraintViolation => BadRequest(ErrorBuilder.AlreadyExistsError(new Dictionary<string, object>() {
-                                            { "Email", requestDto.Email }
+            OperationStatus.Success => CreatedAtAction(nameof(CreateAsync), _mapper.Map<UserDto>(response.Value)),
+            OperationStatus.UniqueConstraintViolation => Conflict(
+                ErrorBuilder.AlreadyExistsError(new Dictionary<string, object>() { { "Email", requestDto.Email }
             })),
             _ => StatusCode(500)
         };
     }
 
+
     [HttpPut("{email}")]
-    public async Task<IActionResult> Update(string email, [FromBody] UpdateUserRequestDto requestDto)
+    public async Task<IActionResult> UpdateAsync(string email, [FromBody] UpdateUserRequestDto requestDto)
     {
         if (requestDto == null)
         {
@@ -88,8 +92,8 @@ public class UsersController : ControllerBase
 
         return response.Status switch
         {
-            OperationStatus.Success => Ok(response.Value),
-            OperationStatus.AlreadyUpdated => BadRequest(ErrorBuilder.AlreadyUpdatedError(new Dictionary<string, object>() {
+            OperationStatus.Success => Ok(_mapper.Map<UserDto>(response.Value)),
+            OperationStatus.UniqueConstraintViolation => PreconditionFailed(ErrorBuilder.AlreadyUpdatedError(new Dictionary<string, object>() {
                                 { "RequestETag", requestDto.ETag },
                                 { "DatabaseEntityEtag", response.Value!.ETag }
             })),

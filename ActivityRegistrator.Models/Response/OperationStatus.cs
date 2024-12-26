@@ -1,8 +1,8 @@
 ﻿namespace ActivityRegistrator.Models.Response;
 public enum OperationStatus
 {
-    Success,
     Failure,
+    Success,
     NotFound,
     UniqueConstraintViolation,
     AlreadyUpdated

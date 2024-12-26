@@ -17,14 +17,14 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
 
     public async Task<ResultListWrapper<Entity>> GetListAsync(string tenantCode)
     {
-        List<Entity> result = _tableClient
+        List<Entity> result = _tableClient //todo. Add logging also here
             .Query<Entity>(x => x.PartitionKey == tenantCode)
             .ToList();
 
         return new ResultListWrapper<Entity>().With(result);
     }
 
-    public async Task<ResultWrapper<Entity>> Get(string partitionKey, string rowKey)
+    public async Task<ResultWrapper<Entity>> GetAsync(string partitionKey, string rowKey)
     {
         ResultWrapper<Entity> response = new();
 
@@ -40,14 +40,16 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
                 _logger.LogError("User not found. tenantCode: {TenantCode}, email: {email}", partitionKey, rowKey);
                 return response.With(OperationStatus.NotFound);
             }
+            _logger.LogError(requestFailedException, "An error occurred while creating a new user");
             throw;
         }
-        catch{
+        catch(Exception ex){
+            _logger.LogError(ex, "An error occurred while getting the user");
             throw;
         }
     }
 
-    public async Task<ResultWrapper<Entity>> Create(Entity entity)
+    public async Task<ResultWrapper<Entity>> CreateAsync(Entity entity)
     {
         ResultWrapper<Entity> response = new();
 
@@ -90,7 +92,7 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
         }
     }
 
-    public async Task<ResultWrapper<Entity>> Delete(Entity entityToDelete)
+    public async Task<ResultWrapper<Entity>> DeleteAsync(Entity entityToDelete)
     {
         ResultWrapper<Entity> response = new();
 
