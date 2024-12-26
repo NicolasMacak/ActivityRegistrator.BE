@@ -8,6 +8,11 @@ using Microsoft.Extensions.Azure;
 namespace ActivityRegistrator.API.Core.Extensions;
 public static class WebApplicationBuilderExtensions
 {
+    /// <summary>
+    /// Injects Azure Client to the <see cref="WebApplicationBuilder.Services"/>
+    /// </summary>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="NotImplementedException"></exception>
     public static void AddAzureClients(this WebApplicationBuilder builder)
     {
         builder.Services.AddAzureClients(async clientBuilder =>
@@ -44,6 +49,9 @@ public static class WebApplicationBuilderExtensions
         });
     }
 
+    /// <summary>
+    /// Injects AutoMapper to the <see cref="WebApplicationBuilder.Services"/>
+    /// </summary>
     public static void AddAutoMapper(this WebApplicationBuilder builder)
     {
         MapperConfiguration configuration = new MapperConfiguration(cfg => {

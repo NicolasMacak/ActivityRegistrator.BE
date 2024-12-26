@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using ActivityRegistrator.API.Controllers;
+﻿using ActivityRegistrator.API.Controllers;
 using ActivityRegistrator.API.Repositories;
 using ActivityRegistrator.API.Service;
 using ActivityRegistrator.Models.Dtoes;

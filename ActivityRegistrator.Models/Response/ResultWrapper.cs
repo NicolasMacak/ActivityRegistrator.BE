@@ -1,4 +1,8 @@
 ﻿namespace ActivityRegistrator.Models.Response;
+/// <summary>
+/// May contain Value of type <see cref="T"/> and <see cref="OperationStatus"/> providing information about operation execution
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public class ResultWrapper<T>
 {
     public T? Value { get; set; }

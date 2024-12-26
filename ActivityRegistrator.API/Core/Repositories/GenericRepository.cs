@@ -16,6 +16,7 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
         _tableClient = tableServiceClient.GetTableClient(tableName);
     }
 
+    /// <inheritdoc/>
     public async Task<ResultListWrapper<Entity>> GetListAsync(string tenantCode)
     {
         ResultListWrapper<Entity> response = new();
@@ -35,6 +36,7 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
         }
     }
 
+    /// <inheritdoc/>
     public async Task<ResultWrapper<Entity>> GetAsync(string partitionKey, string rowKey)
     {
         ResultWrapper<Entity> response = new();
@@ -58,6 +60,7 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
         }
     }
 
+    /// <inheritdoc/>
     public async Task<ResultWrapper<Entity>> CreateAsync(Entity entity)
     {
         ResultWrapper<Entity> response = new();
@@ -74,6 +77,7 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
         }
     }
 
+    /// <inheritdoc/>
     public async Task<ResultWrapper<Entity>> Update(string partitionKey, ETag tag, Entity entity)
     {
         ResultWrapper<Entity> response = new();
@@ -101,6 +105,7 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
         }
     }
 
+    /// <inheritdoc/>
     public async Task<ResultWrapper<Entity>> DeleteAsync(Entity entityToDelete)
     {
         ResultWrapper<Entity> response = new();

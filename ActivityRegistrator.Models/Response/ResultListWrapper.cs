@@ -1,13 +1,14 @@
 ﻿namespace ActivityRegistrator.Models.Response;
+/// <summary>
+/// May contain Values of type <see cref="T"/> and <see cref="OperationStatus"/> providing information about operation execution
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public class ResultListWrapper<T>
 {
     public List<T>? Values { get; set; }
     public OperationStatus Status { get; set; }
     public int Count { get; set; } = 0;
 
-    /// <summary>
-    /// Successful operation
-    /// </summary>
     public ResultListWrapper<T> With(List<T> values)
     {
         Values = values;
@@ -17,9 +18,6 @@ public class ResultListWrapper<T>
         return this;
     }
 
-    /// <summary>
-    /// Unsucessful operation
-    /// </summary>
     public ResultListWrapper<T> With(OperationStatus status)
     {
         Status = Status;

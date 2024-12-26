@@ -15,16 +15,19 @@ public class UserService : IUserService
         _userRepository = userRepository;
     }
 
+    /// <inheritdoc/>
     public async Task<ResultListWrapper<UserEntity>> GetListAsync(string tenantCode)
     {
         return await _userRepository.GetListAsync(tenantCode);
     }
 
+    /// <inheritdoc/>
     public async Task<ResultWrapper<UserEntity>> GetAsync(string tenantCode, string email)
     {
         return await _userRepository.GetAsync(tenantCode, email);
     }
 
+    /// <inheritdoc/>
     public async Task<ResultWrapper<UserEntity>> CreateAsync(string tenantCode, CreateUserRequestDto requestDto)
     {
         ResultWrapper<UserEntity> responseOfEntityToUpdate = await _userRepository.GetAsync(tenantCode, requestDto.Email);
@@ -49,6 +52,7 @@ public class UserService : IUserService
         return await _userRepository.CreateAsync(newUserEntity);
     }
 
+    /// <inheritdoc/>
     public async Task<ResultWrapper<UserEntity>> UpdateAsync(string tenantCode, string email, UpdateUserRequestDto request)
     {
         ResultWrapper<UserEntity> responseOfEntityToUpdate = await _userRepository.GetAsync(tenantCode, email);
@@ -65,6 +69,7 @@ public class UserService : IUserService
         return await _userRepository.Update(email, request.ETag, entityToUpdate);
     }
 
+    /// <inheritdoc/>
     public async Task<ResultWrapper<UserEntity>> DeleteAsync(string tenantCode, string email)
     {
         ResultWrapper<UserEntity> entityToDeleteResponse = await _userRepository.GetAsync(tenantCode, email);
