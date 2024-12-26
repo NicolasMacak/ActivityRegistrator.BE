@@ -54,7 +54,7 @@ public class UsersControllerTests
         Assert.Equal("TenantName", record.TenantName);
         Assert.Equal("FullName", record.FullName);
         Assert.Equal("Email", record.Email);
-        Assert.Equal(Azure.ETag.All, record.ETag);
+        Assert.Equal(ETag.All, record.ETag);
     }
 
     [Fact]

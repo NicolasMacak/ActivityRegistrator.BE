@@ -36,7 +36,7 @@ public class UsersController : ControllerBase
 
         if(response.Status != OperationStatus.Success)
         {
-            return StatusCode(500);
+            return StatusCode((int) HttpStatusCode.InternalServerError);
         }
 
         return Ok(new ResponseListDto<UserDto>(
@@ -55,7 +55,7 @@ public class UsersController : ControllerBase
             OperationStatus.NotFound => NotFound(ErrorBuilder.NotFoundError(new Dictionary<string, object>() {
                 { "email", email }
             })),
-            _ => StatusCode(500)
+            _ => StatusCode((int) HttpStatusCode.InternalServerError)
         };
     }
 
@@ -75,7 +75,7 @@ public class UsersController : ControllerBase
             OperationStatus.UniqueConstraintViolation => Conflict(
                 ErrorBuilder.AlreadyExistsError(new Dictionary<string, object>() { { "Email", requestDto.Email }
             })),
-            _ => StatusCode(500)
+            _ => StatusCode((int) HttpStatusCode.InternalServerError)
         };
     }
 
@@ -97,7 +97,7 @@ public class UsersController : ControllerBase
                                 { "RequestETag", requestDto.ETag },
                                 { "DatabaseEntityEtag", response.Value!.ETag }
             })),
-            _ => StatusCode(500)
+            _ => StatusCode((int) HttpStatusCode.InternalServerError)
         };
     }
 
@@ -112,7 +112,7 @@ public class UsersController : ControllerBase
             OperationStatus.NotFound => NotFound(ErrorBuilder.NotFoundError(new Dictionary<string, object>() {
                                 { "Email", email }
             })),
-            _ => StatusCode(500)
+            _ => StatusCode((int) HttpStatusCode.InternalServerError)
         };
     }
 }

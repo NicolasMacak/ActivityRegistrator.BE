@@ -17,11 +17,21 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
 
     public async Task<ResultListWrapper<Entity>> GetListAsync(string tenantCode)
     {
-        List<Entity> result = _tableClient //todo. Add logging also here
-            .Query<Entity>(x => x.PartitionKey == tenantCode)
-            .ToList();
+        ResultListWrapper<Entity> response = new();
 
-        return new ResultListWrapper<Entity>().With(result);
+        try
+        {
+            List<Entity> result = _tableClient //todo. Add logging also here
+                .Query<Entity>(x => x.PartitionKey == tenantCode)
+                .ToList();
+
+            return response.With(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while creating a new user");
+            return response.With(OperationStatus.Failure);
+        }
     }
 
     public async Task<ResultWrapper<Entity>> GetAsync(string partitionKey, string rowKey)
@@ -41,11 +51,11 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
                 return response.With(OperationStatus.NotFound);
             }
             _logger.LogError(requestFailedException, "An error occurred while creating a new user");
-            throw;
+            return response.With(OperationStatus.Failure);
         }
         catch(Exception ex){
             _logger.LogError(ex, "An error occurred while getting the user");
-            throw;
+            return response.With(OperationStatus.Failure);
         }
     }
 
