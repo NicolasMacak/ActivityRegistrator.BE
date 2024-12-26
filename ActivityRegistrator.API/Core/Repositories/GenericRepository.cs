@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using ActivityRegistrator.API.Core.Extensions;
 using ActivityRegistrator.Models.Response;
 using Azure;
 using Azure.Data.Tables;
@@ -21,9 +22,9 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
 
         try
         {
-            List<Entity> result = _tableClient //todo. Add logging also here
-                .Query<Entity>(x => x.PartitionKey == tenantCode)
-                .ToList();
+            List<Entity> result = await _tableClient
+                .QueryAsync<Entity>(x => x.PartitionKey == tenantCode)
+                .ToListAsync();
 
             return response.With(result);
         }
@@ -40,18 +41,16 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
 
         try
         {
-            Entity? result = _tableClient.GetEntity<Entity>(partitionKey, rowKey);
-            return response.With(result);
-        }
-        catch (RequestFailedException requestFailedException)
-        {
-            if(requestFailedException.Status == (int)HttpStatusCode.NotFound)
+            NullableResponse<Entity> maybeEntity = await _tableClient.GetEntityIfExistsAsync<Entity>(partitionKey, rowKey);
+            if (maybeEntity.HasValue)
+            {
+                return response.With(maybeEntity.Value!);
+            }
+            else
             {
                 _logger.LogError("User not found. tenantCode: {TenantCode}, email: {email}", partitionKey, rowKey);
                 return response.With(OperationStatus.NotFound);
             }
-            _logger.LogError(requestFailedException, "An error occurred while creating a new user");
-            return response.With(OperationStatus.Failure);
         }
         catch(Exception ex){
             _logger.LogError(ex, "An error occurred while getting the user");
