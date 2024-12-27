@@ -9,17 +9,8 @@ My aim is to minimize costs by leveraging free-tier services wherever possible.
 
 ## Technology stack
 - FE: Angular V18
-- Cloud: Microsoft Azure
+- Host: Microsoft Azure
 - Database: Azure table storage
-- Google Calendar API
-- Message-Broker: MQRabbit
 
-## Planned vs Implemented features
-🔨 Designing objects and their relations (In progress) <br>
-🔨 Adding people (In progress) <br>
-:large_blue_diamond: Creating events (Backlog) <br>
-🔨 Access management: Identity, Roles (In progress) <br>
-:large_blue_diamond: Multi-language (Backlog) <br>
-🔨 Multi-tenant (In progress) <br>
-:large_blue_diamond: Export/Import actions with Google Calendar (Backlog) <br>
-:large_blue_diamond: Mail newsletter (Message-Broker) (Backlog) <br>
+## Implementation
+Stories accessible in [ActvitiyRegistrator.API project](https://github.com/users/NicolasMacak/projects/3)
