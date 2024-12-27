@@ -12,5 +12,5 @@ My aim is to minimize costs by leveraging free-tier services wherever possible.
 - Host: Microsoft Azure
 - Database: Azure table storage
 
-## Implementation
-Stories accessible in [ActvitiyRegistrator.API project](https://github.com/users/NicolasMacak/projects/3)
+## Implementation progress
+[ActvitiyRegistrator.API project](https://github.com/users/NicolasMacak/projects/3)
