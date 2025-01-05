@@ -3,7 +3,7 @@ using ActivityRegistrator.API.Repositories;
 using ActivityRegistrator.API.Core.Extensions;
 using ActivityRegistrator.API.Service;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
@@ -12,11 +12,13 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IEnvironmentService, EnvironmentService>();
+builder.Services.AddTransient<IEnvironmentRepository, EnvironmentRepository>();
 
 builder.AddAzureClients();
 builder.AddAutoMapper();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
@@ -25,6 +27,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.Services.GetRequiredService<IEnvironmentService>().SetupEnvironment();
 
 app.UseAuthorization();
 

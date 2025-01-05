@@ -3,7 +3,6 @@ using ActivityRegistrator.API.Core;
 using ActivityRegistrator.API.Service;
 using ActivityRegistrator.Models.Dtoes;
 using ActivityRegistrator.Models.Entities;
-using ActivityRegistrator.Models.ObjectResults;
 using ActivityRegistrator.Models.Request;
 using ActivityRegistrator.Models.Response;
 using AutoMapper;

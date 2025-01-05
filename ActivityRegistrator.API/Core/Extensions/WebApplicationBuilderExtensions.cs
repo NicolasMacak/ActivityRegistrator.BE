@@ -1,13 +1,17 @@
-﻿using ActivityRegistrator.Models.Dtoes;
-using ActivityRegistrator.Models.Entities;
-using ActivityRegistrator.Models.MappingProfiles;
+﻿using ActivityRegistrator.Models.MappingProfiles;
 using AutoMapper;
 using Azure;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using Microsoft.Extensions.Azure;
 
 namespace ActivityRegistrator.API.Core.Extensions;
 public static class WebApplicationBuilderExtensions
 {
+    private const string KeyVaultName = "ActivityRegistratorKeys"; 
+    private const string KeyVaultUri = $"https://{KeyVaultName}.vault.azure.net";
+    private const string SecretName = "ActivityRegisratorConnectionString";
+
     /// <summary>
     /// Injects Azure Client to the <see cref="WebApplicationBuilder.Services"/>
     /// </summary>
@@ -15,7 +19,7 @@ public static class WebApplicationBuilderExtensions
     /// <exception cref="NotImplementedException"></exception>
     public static void AddAzureClients(this WebApplicationBuilder builder)
     {
-        builder.Services.AddAzureClients(async clientBuilder =>
+        builder.Services.AddAzureClients(clientBuilder =>
         {
             if (builder.Environment.IsDevelopment())
             {
@@ -23,29 +27,19 @@ public static class WebApplicationBuilderExtensions
 
                 if (connectionString == null)
                 {
-                    throw new ArgumentNullException(nameof(connectionString));
+                    throw new NullReferenceException(nameof(connectionString));
                 }
 
                 clientBuilder.AddTableServiceClient(connectionString);
             }
             else
             {
-                throw new NotImplementedException();
-                //const string KeyVaultName = "ActivityRegistratorKeys";
-                //const string SecretName = "ActivityRegisratorConnectionString";
-                //string keyVaultUri = $"https://{KeyVaultName}.vault.azure.net";
+                SecretClient kvClient = new SecretClient(new Uri(KeyVaultUri), new DefaultAzureCredential());
+                Response<KeyVaultSecret> keyVaultConnectionStringSecret = kvClient.GetSecret(SecretName);
+                string connectionString = keyVaultConnectionStringSecret.Value.Value;
 
-                //SecretClient kvClient = new SecretClient(new Uri(keyVaultUri), new DefaultAzureCredential());
-
-                //Response<KeyVaultSecret> secret = await kvClient.GetSecretAsync(SecretName);
+                clientBuilder.AddTableServiceClient(connectionString);
             }
-
-            //tenantId
-            //3bb5863c - 846d - 499c - b163 - 89b96e7166c9
-
-            //clientBuilder.AddTableServiceClient();
-
-            // store credentials niekde safe
         });
     }
 
@@ -54,7 +48,7 @@ public static class WebApplicationBuilderExtensions
     /// </summary>
     public static void AddAutoMapper(this WebApplicationBuilder builder)
     {
-        MapperConfiguration configuration = new MapperConfiguration(cfg => {
+        MapperConfiguration configuration = new(cfg => {
             cfg.AddProfile<UserProfile>(); 
             } 
         );
