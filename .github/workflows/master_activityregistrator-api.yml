@@ -1,9 +1,12 @@
-name: Build and deploy ActivityRegistrator.Api
+name: Build and deploy ActivityRegistrator.API
 
 on:
   push:
     branches:
     - master
+    paths:
+    - ActivityRegistrator.API/**
+    - .github/workflows/**
   workflow_dispatch:
 
 
@@ -20,13 +23,16 @@ jobs:
         dotnet-version: '8.x'
 
     - name: Add NuGet source for Azure DevOps Artifacts
-      run: dotnet nuget add source "https://pkgs.dev.azure.com/macak-nicolas/Registrator.API/_packaging/Models/nuget/v3/index.json" --name ActivityRegistrator.API.Models --username any  --password ${{ secrets.AZURE_DEVOPS_PAT }}    
-
-    - name: Build with dotnet
-      run: dotnet build --configuration Release
-
-    - name: dotnet publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      run: dotnet nuget add source "https://pkgs.dev.azure.com/macak-nicolas/Registrator.API/_packaging/Models/nuget/v3/index.json" 
+        --name ActivityRegistrator.API.Models 
+        --username any  
+        --password ${{ secrets.AZURE_DEVOPS_PAT }} --store-password-in-clear-text
+        
+    - name: Build ActivityRegistrator.API
+      run: dotnet build ActivityRegistrator.API/ActivityRegistrator.API.csproj --configuration Release
+      
+    - name: Publish ActivityRegistrator.API
+      run: dotnet publish ActivityRegistrator.API/ActivityRegistrator.API.csproj --configuration Release --output ${{env.DOTNET_ROOT}}/myapp
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v4
@@ -52,9 +58,9 @@ jobs:
     - name: Login to Azure
       uses: azure/login@v2
       with:
-        client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_2CD404FCC06C4874A343044B3E8177B2 }}
-        tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_602B6E9D89714D759C845512EEE11061 }}
-        subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_83FF4F6954134D08BB1AB7C4DBAB049B }}
+        client-id: ${{ secrets.AZURE_APPLICATION_REGISTRATION_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
     - name: Deploy to Azure Web App
       id: deploy-to-webapp
@@ -63,3 +69,4 @@ jobs:
         app-name: 'ActivityRegistratorAPI'
         slot-name: 'Production'
         package: .
+        startup-command: 'dotnet ActivityRegistrator.API.dll'
