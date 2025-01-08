@@ -20,11 +20,7 @@ jobs:
         dotnet-version: '8.x'
 
     - name: Add NuGet source for Azure DevOps Artifacts
-        run: |
-          dotnet nuget add source "https://pkgs.dev.azure.com/macak-nicolas/Registrator.API/_packaging/Models/nuget/v3/index.json" \
-          --name AzureDevOpsArtifacts \
-          --username any \
-          --password ${{ secrets.AZURE_DEVOPS_PAT }}    
+      run: dotnet nuget add source "https://pkgs.dev.azure.com/macak-nicolas/Registrator.API/_packaging/Models/nuget/v3/index.json" --name ActivityRegistrator.API.Models --username any  --password ${{ secrets.AZURE_DEVOPS_PAT }}    
 
     - name: Build with dotnet
       run: dotnet build --configuration Release
