@@ -59,6 +59,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
+    [ActionName(nameof(CreateAsync))]
     public async Task<IActionResult> CreateAsync([FromBody] CreateUserRequestDto requestDto)
     {
         if (requestDto == null) // todo. later returned by fluent validation
