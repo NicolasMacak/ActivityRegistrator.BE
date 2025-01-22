@@ -19,9 +19,11 @@ public static class WebApplicationBuilderExtensions
     /// <exception cref="NotImplementedException"></exception>
     public static void AddAzureClients(this WebApplicationBuilder builder)
     {
+        bool? useAzurite = builder.Configuration.GetValue<bool>("Environment:useAzurite");
+
         builder.Services.AddAzureClients(clientBuilder =>
         {
-            if (builder.Environment.IsDevelopment())
+            if (builder.Environment.IsDevelopment() && useAzurite.HasValue && useAzurite.Value)
             {
                 string? connectionString = builder.Configuration.GetValue<string>("ConnectionStrings:LocalDevStorage");
 
