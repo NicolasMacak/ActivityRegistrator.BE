@@ -3,7 +3,9 @@ using AutoMapper;
 using Azure;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Azure;
+using Microsoft.Identity.Web;
 
 namespace ActivityRegistrator.API.Core.Extensions;
 public static class WebApplicationBuilderExtensions
@@ -43,6 +45,18 @@ public static class WebApplicationBuilderExtensions
                 clientBuilder.AddTableServiceClient(connectionString);
             }
         });
+    }
+
+    public static void AddAzureAuthentification(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddMicrosoftIdentityWebApi(options =>
+            {
+                builder.Configuration.Bind("AzureAdB2C", options);
+
+                options.TokenValidationParameters.NameClaimType = "name";
+            },
+    options => { builder.Configuration.Bind("AzureAdB2C", options); });
     }
 
     /// <summary>
