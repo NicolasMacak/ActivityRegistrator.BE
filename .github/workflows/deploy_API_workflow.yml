@@ -6,7 +6,6 @@ on:
     - master
     paths:
     - ActivityRegistrator.API/**
-    - .github/workflows/**
   workflow_dispatch:
 
 
@@ -22,15 +21,12 @@ jobs:
       with:
         dotnet-version: '8.x'
 
-    - name: Add NuGet source for Azure DevOps Artifacts
-      run: dotnet nuget add source "https://pkgs.dev.azure.com/macak-nicolas/Registrator.API/_packaging/Models/nuget/v3/index.json" 
-        --name ActivityRegistrator.API.Models 
-        --username any  
-        --password ${{ secrets.AZURE_DEVOPS_PAT }} --store-password-in-clear-text
-        
+    - name: Add ActivityRegistrator.Models nuget from Github Packages
+      run: dotnet nuget add source --username NicolasMacak --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
+
     - name: Build ActivityRegistrator.API
       run: dotnet build ActivityRegistrator.API/ActivityRegistrator.API.csproj --configuration Release
-      
+
     - name: Publish ActivityRegistrator.API
       run: dotnet publish ActivityRegistrator.API/ActivityRegistrator.API.csproj --configuration Release --output ${{env.DOTNET_ROOT}}/myapp
 
