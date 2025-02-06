@@ -9,7 +9,7 @@ My aim is to minimize costs by leveraging free-tier services wherever possible.
 
 ## Technology stack
 - FE: Angular V18
-- Host: Microsoft Azure
+- Hosting: Microsoft Azure
 - Database: Azure table storage
 
 ## Implementation progress
