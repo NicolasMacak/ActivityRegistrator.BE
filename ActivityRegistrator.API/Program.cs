@@ -16,6 +16,8 @@ builder.Services.AddTransient<IEnvironmentService, EnvironmentService>();
 builder.Services.AddTransient<IEnvironmentRepository, EnvironmentRepository>();
 
 builder.AddAzureClients();
+builder.AddAzureB2CAuthorization();// rename to something better
+
 builder.AddAutoMapper();
 
 WebApplication app = builder.Build();

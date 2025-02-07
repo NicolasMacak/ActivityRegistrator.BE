@@ -9,9 +9,9 @@ namespace ActivityRegistrator.API.Controllers
         public AuthorizationController() { }
 
         [HttpGet("signout")]
-        public Task SignOutAsync()
+        public IActionResult SignOutAsync()
         {
-
+            return Ok();
         }
     }
 }
