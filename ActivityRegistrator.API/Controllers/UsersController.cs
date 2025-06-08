@@ -1,16 +1,21 @@
 ﻿using System.Net;
 using ActivityRegistrator.API.Core;
+using ActivityRegistrator.API.Core.Constants;
 using ActivityRegistrator.API.Service;
 using ActivityRegistrator.Models.Dtoes;
 using ActivityRegistrator.Models.Entities;
 using ActivityRegistrator.Models.Request;
 using ActivityRegistrator.Models.Response;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web.Resource;
 using static ActivityRegistrator.API.Core.ObjectResultBuilder;
 
 namespace ActivityRegistrator.API.Controllers;
 
+[Authorize]
+[RequiredScope(Scopes.Read, Scopes.Write)]
 [ApiController]
 [Route("[controller]")]
 public class UsersController : ControllerBase

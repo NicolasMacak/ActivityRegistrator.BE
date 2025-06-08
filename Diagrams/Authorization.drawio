@@ -1,0 +1,74 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/27.0.9 Chrome/134.0.6998.205 Electron/35.4.0 Safari/537.36" version="27.0.9">
+  <diagram name="Page-1" id="zDDYWADxTO9XXgTUflpC">
+    <mxGraphModel dx="1065" dy="915" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Tl1A1arsHsf-u-5G5se4-3" value="FE" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="10" y="490" width="300" height="330" as="geometry" />
+        </mxCell>
+        <mxCell id="Tl1A1arsHsf-u-5G5se4-18" value="Asks" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="Tl1A1arsHsf-u-5G5se4-3">
+          <mxGeometry x="110" y="55" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Tl1A1arsHsf-u-5G5se4-20" value="" style="triangle;whiteSpace=wrap;html=1;" vertex="1" parent="Tl1A1arsHsf-u-5G5se4-3">
+          <mxGeometry x="170" y="110" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Tl1A1arsHsf-u-5G5se4-5" value="BE" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="800" y="500" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="Tl1A1arsHsf-u-5G5se4-6" value="Scopes" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="460" y="540" width="140" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Tl1A1arsHsf-u-5G5se4-7" value="api.read" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="Tl1A1arsHsf-u-5G5se4-6">
+          <mxGeometry y="30" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Tl1A1arsHsf-u-5G5se4-8" value="api.write" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="Tl1A1arsHsf-u-5G5se4-6">
+          <mxGeometry y="60" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Tl1A1arsHsf-u-5G5se4-11" value="Azure AD B2C" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="260" width="480" height="400" as="geometry" />
+        </mxCell>
+        <mxCell id="Tl1A1arsHsf-u-5G5se4-13" value="ActivityRegistratorClientApp" style="whiteSpace=wrap;html=1;" vertex="1" parent="Tl1A1arsHsf-u-5G5se4-11">
+          <mxGeometry x="30" y="50" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Tl1A1arsHsf-u-5G5se4-14" value="ActivityRegistratorWebApi" style="whiteSpace=wrap;html=1;" vertex="1" parent="Tl1A1arsHsf-u-5G5se4-11">
+          <mxGeometry x="280" y="60" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Tl1A1arsHsf-u-5G5se4-16" value="ExposeApi" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="Tl1A1arsHsf-u-5G5se4-11">
+          <mxGeometry x="380" y="140" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Tl1A1arsHsf-u-5G5se4-22" value="ApiPermissions" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="Tl1A1arsHsf-u-5G5se4-11">
+          <mxGeometry x="100" y="130" width="110" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Tl1A1arsHsf-u-5G5se4-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="Tl1A1arsHsf-u-5G5se4-16" target="Tl1A1arsHsf-u-5G5se4-6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="680" y="450" />
+              <mxPoint x="530" y="450" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Tl1A1arsHsf-u-5G5se4-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Tl1A1arsHsf-u-5G5se4-18" target="Tl1A1arsHsf-u-5G5se4-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Tl1A1arsHsf-u-5G5se4-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Tl1A1arsHsf-u-5G5se4-20" target="Tl1A1arsHsf-u-5G5se4-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Tl1A1arsHsf-u-5G5se4-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="Tl1A1arsHsf-u-5G5se4-22" target="Tl1A1arsHsf-u-5G5se4-6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="415" y="450" />
+              <mxPoint x="530" y="450" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Tl1A1arsHsf-u-5G5se4-24" value="Uses" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="830" y="550" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Tl1A1arsHsf-u-5G5se4-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.997;entryY=0.859;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Tl1A1arsHsf-u-5G5se4-24" target="Tl1A1arsHsf-u-5G5se4-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

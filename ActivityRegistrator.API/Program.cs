@@ -16,6 +16,8 @@ builder.Services.AddTransient<IEnvironmentService, EnvironmentService>();
 builder.Services.AddTransient<IEnvironmentRepository, EnvironmentRepository>();
 
 builder.AddAzureClients();
+builder.AddAzureB2CAuthorization();// rename to something better
+
 builder.AddAutoMapper();
 
 WebApplication app = builder.Build();
@@ -27,11 +29,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
 
 app.Services.GetRequiredService<IEnvironmentService>().SetupEnvironment();
-
-app.UseAuthorization();
-
-app.MapControllers();
 
 app.Run();
