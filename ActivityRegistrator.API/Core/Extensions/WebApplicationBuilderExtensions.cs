@@ -55,7 +55,7 @@ public static class WebApplicationBuilderExtensions
 
                 options.TokenValidationParameters.NameClaimType = "name";
             },
-    options => { builder.Configuration.Bind("AzureAdB2C", options); });
+            options => { builder.Configuration.Bind("AzureAdB2C", options); });
     }
 
     /// <summary>
