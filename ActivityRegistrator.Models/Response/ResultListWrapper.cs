@@ -3,6 +3,7 @@
 /// May contain Values of type <see cref="T"/> and <see cref="OperationStatus"/> providing information about operation execution
 /// </summary>
 /// <typeparam name="T"></typeparam>
+[Obsolete("Use OneOf instead")]
 public class ResultListWrapper<T>
 {
     public List<T>? Values { get; set; }

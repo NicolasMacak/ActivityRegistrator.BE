@@ -2,6 +2,7 @@
 using ActivityRegistrator.Models.Response;
 using ActivityRegistrator.API.Repositories;
 using ActivityRegistrator.Models.Request;
+using ActivityRegistrator.API.Core.Enums;
 
 namespace ActivityRegistrator.API.Service;
 public class UserService : IUserService
@@ -46,7 +47,8 @@ public class UserService : IUserService
         {
             PartitionKey = tenantCode,
             RowKey = requestDto.Email,
-            FullName = requestDto.FullName
+            FullName = requestDto.FullName,
+            UserRole = (int) UserRoles.User
         };
 
         return await _userRepository.CreateAsync(newUserEntity);

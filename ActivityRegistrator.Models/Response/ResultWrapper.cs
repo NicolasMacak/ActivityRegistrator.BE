@@ -1,8 +1,11 @@
-﻿namespace ActivityRegistrator.Models.Response;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace ActivityRegistrator.Models.Response;
 /// <summary>
 /// May contain Value of type <see cref="T"/> and <see cref="OperationStatus"/> providing information about operation execution
 /// </summary>
 /// <typeparam name="T"></typeparam>
+[Obsolete("Use OneOf nuget instead")]
 public class ResultWrapper<T>
 {
     public T? Value { get; set; }

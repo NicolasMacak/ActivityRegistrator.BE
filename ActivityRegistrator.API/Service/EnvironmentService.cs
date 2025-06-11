@@ -22,6 +22,9 @@ public class EnvironmentService : IEnvironmentService
         _logger.LogInformation("Environment setup completed");
     }
 
+    /// <summary>
+    /// Creates tables defined in <see cref="TablesNames"/> class in Azure Table Storage, if they do not exist already."/>
+    /// </summary>
     private void CreateAzureTableStorageTablesIfNotExists()
     {
         Type tableNamesConstantsType = typeof(TablesNames);

@@ -4,8 +4,19 @@ using Azure.Data.Tables;
 namespace ActivityRegistrator.Models.Entities;
 public class UserEntity : ITableEntity
 {   
+    public string TenantCode {
+        get => PartitionKey;
+        set => PartitionKey = value;
+    } 
+
+    public string Email {
+        get => RowKey;
+        set => RowKey = value;
+    }
+
     public string PartitionKey { get; set; } = string.Empty;
     public string RowKey { get; set; } = string.Empty;
+    public int UserRole { get; set; } = int.MaxValue;
     public string FullName { get; set; } = string.Empty;
     public DateTimeOffset? Timestamp { get; set; }
     public ETag ETag { get; set; }
