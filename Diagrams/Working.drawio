@@ -4,17 +4,8 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="trZj9BtUewbr66JKDjCB-2" value="Todo&lt;br&gt;&amp;nbsp;- Application access scope&lt;div&gt;- vyskusat secrest&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-          <mxGeometry x="35" y="43" width="170" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="trZj9BtUewbr66JKDjCB-3" value="&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;Transient ActiveUserService&lt;/span&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="160" y="120" width="180" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="trZj9BtUewbr66JKDjCB-4" value="" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="370" y="53" width="180" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="trZj9BtUewbr66JKDjCB-5" value="Post some role with role to db" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-          <mxGeometry x="40" y="208" width="180" height="30" as="geometry" />
+        <mxCell id="trZj9BtUewbr66JKDjCB-2" value="Todo&lt;br&gt;- repository vracia entitu&lt;br&gt;- Vyskusat oneOf&lt;div&gt;- try catch do service&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="45" y="38" width="150" height="70" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

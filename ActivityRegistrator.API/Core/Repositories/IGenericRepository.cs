@@ -22,7 +22,7 @@ public interface IGenericRepository<Entity>
     /// 200: Success <br></br>
     /// 404: Entity not present in the database
     /// </returns>
-    public Task<ResultWrapper<Entity>> GetAsync(string partitionKey, string rowKey);
+    public Task<Entity> GetAsync(string partitionKey, string rowKey);
     /// <summary>
     /// Creates new entity and adds it to the database
     /// </summary>

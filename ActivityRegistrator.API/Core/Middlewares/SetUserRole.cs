@@ -1,10 +1,10 @@
-﻿using ActivityRegistrator.API.Core.Enums;
-using ActivityRegistrator.API.Service;
-
+﻿using ActivityRegistrator.API.Service;
+using Microsoft.Extensions.Primitives;
 
 namespace ActivityRegistrator.API.Core.Middlewares;
 public class SetUserRole
 {
+    private const string TenantCodeName = "x-tenant-code";
     private readonly RequestDelegate _next;
 
     public SetUserRole(RequestDelegate next)
@@ -14,17 +14,11 @@ public class SetUserRole
 
     public async Task InvokeAsync(HttpContext context, IActiveUserService activeUserService) // functionality not tested. Post some user with role to the db
     {
-        var loggerUser = context.User; // stadeto vytiahnut email
+        StringValues tenantCode = context.Request.Headers[TenantCodeName];
 
-        string? tenantCode = "TangoVida";// context.Request.Headers["Tenant-Code"].FirstOrDefault();
-        string? email = "nicolas.macak@gmail.com";// context.Request.Headers["Email"].FirstOrDefault(); 
-        if (!string.IsNullOrEmpty(tenantCode) && !string.IsNullOrEmpty(email))
+        if (!string.IsNullOrEmpty(tenantCode))
         {
-            await activeUserService.AssignUserRole(tenantCode, email);
-        }
-        else
-        {
-            activeUserService.DeclareUserAsGuest();
+            await activeUserService.SetUserProperties(tenantCode, context.User.Claims); 
         }
 
         await _next(context);
