@@ -82,4 +82,18 @@ public class UserService : IUserService
 
         return await _userRepository.DeleteAsync(entityToDeleteResponse.Value!);
     }
+
+    public async Task<UserRoles> GetUserRole(string tenantCode, string email)
+    {
+        ResultWrapper<UserEntity> tenantUser = await GetAsync(tenantCode, email);
+
+        if (tenantUser.Status == OperationStatus.Success)
+        {
+            return Enum.TryParse(tenantUser.Value!.AccessRole, out UserRoles userRole) ?
+                 userRole
+                 : UserRoles.Guest;
+        }
+
+        return UserRoles.Guest;
+    }
 }
