@@ -1,4 +1,4 @@
-﻿using ActivityRegistrator.API.Core.Constants;
+﻿using ActivityRegistrator.API.Core.DataProcessing.Constants;
 using ActivityRegistrator.API.Repositories;
 using System.Reflection;
 

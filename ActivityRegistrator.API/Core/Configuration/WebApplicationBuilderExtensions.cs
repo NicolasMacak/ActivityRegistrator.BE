@@ -6,11 +6,14 @@ using Azure.Security.KeyVault.Secrets;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Azure;
 using Microsoft.Identity.Web;
+using ActivityRegistrator.API.Core.UserAccess.Enums;
+using ActivityRegistrator.API.Core.UserAccess.Constants;
+using ActivityRegistrator.API.Core.Configuration;
 
-namespace ActivityRegistrator.API.Core.Extensions;
+namespace ActivityRegistrator.API.Core.Configuration;
 public static class WebApplicationBuilderExtensions
 {
-    private const string KeyVaultUri = "https://activityregistratorkv.vault.azure.net/"; // todo. to the conf?
+    private const string KeyVaultUri = "https://activityregistratorkv.vault.azure.net/";
     private const string SecretName = "ActivityRegistratorStorageAccountConnectionString";
 
     /// <summary>
@@ -46,16 +49,35 @@ public static class WebApplicationBuilderExtensions
         });
     }
 
-    public static void AddAzureB2CAuthorization(this WebApplicationBuilder builder)
+    public static void AddAzureB2CAuthentification(this WebApplicationBuilder builder)
     {
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddMicrosoftIdentityWebApi(options =>
             {
-                builder.Configuration.Bind("AzureAdB2C", options);
-
-                options.TokenValidationParameters.NameClaimType = "name";
+                options.TokenValidationParameters.NameClaimType = "name"; // todo.can be access in User.Identity.Name. Needed?
             },
             options => { builder.Configuration.Bind("AzureAdB2C", options); });
+    }
+
+    public static void AddLevelAccessAuthorizationPolicies(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy(UserAccessLevelPolicy.RootAccess, policy =>
+                policy.AddRequirements(new EndpointRequirement(UserAccessLevel.Root)));
+
+            options.AddPolicy(UserAccessLevelPolicy.TenantAdminAccess, policy =>
+                policy.AddRequirements(new EndpointRequirement(UserAccessLevel.TenantAdmin)));
+
+            options.AddPolicy(UserAccessLevelPolicy.DelegatedTenantAdminAccess, policy =>
+                policy.AddRequirements(new EndpointRequirement(UserAccessLevel.DelegatedAdmin)));
+
+            options.AddPolicy(UserAccessLevelPolicy.UserAccess, policy =>
+                policy.AddRequirements(new EndpointRequirement(UserAccessLevel.User)));
+
+            options.AddPolicy(UserAccessLevelPolicy.GuestAccess, policy =>
+                policy.AddRequirements(new EndpointRequirement(UserAccessLevel.Guest)));
+        });
     }
 
     /// <summary>

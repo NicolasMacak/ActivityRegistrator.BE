@@ -2,7 +2,6 @@
 using ActivityRegistrator.Models.Request;
 using ActivityRegistrator.Models.Response;
 using ActivityRegistrator.API.Repositories;
-using ActivityRegistrator.API.Core.Enums;
 
 namespace ActivityRegistrator.API.Service;
 public interface IUserService
@@ -27,9 +26,4 @@ public interface IUserService
 
     /// <inheritdoc cref="IGenericRepository{Entity}.DeleteAsync(Entity)" />
     public Task<ResultWrapper<UserEntity>> DeleteAsync(string tenantCode, string email);
-
-    /// <summary>
-    /// Returns role of the user. If user is not found or his role could not be parsed out, returns <see cref="UserRoles.Guest"/> role.
-    /// </summary>
-    public Task<UserRoles> GetUserRole(string  tenantCode, string email);
 }

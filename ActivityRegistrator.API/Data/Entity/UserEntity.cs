@@ -1,5 +1,5 @@
 ﻿using System.Runtime.Serialization;
-using ActivityRegistrator.API.Core.Enums;
+using ActivityRegistrator.API.Core.UserAccess.Enums;
 using Azure;
 using Azure.Data.Tables;
 
@@ -20,7 +20,7 @@ public class UserEntity : ITableEntity
 
     public string PartitionKey { get; set; } = string.Empty;
     public string RowKey { get; set; } = string.Empty;
-    public string AccessRole { get; set; } = UserRoles.Guest.ToString();
+    public string AccessLevel { get; set; } = UserAccessLevel.Guest.ToString();
     public string FullName { get; set; } = string.Empty;
     public DateTimeOffset? Timestamp { get; set; }
     public ETag ETag { get; set; }

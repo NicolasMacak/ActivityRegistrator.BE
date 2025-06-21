@@ -2,7 +2,7 @@
 using ActivityRegistrator.Models.Response;
 using ActivityRegistrator.API.Repositories;
 using ActivityRegistrator.Models.Request;
-using ActivityRegistrator.API.Core.Enums;
+using ActivityRegistrator.API.Core.UserAccess.Enums;
 
 namespace ActivityRegistrator.API.Service;
 public class UserService : IUserService
@@ -48,7 +48,7 @@ public class UserService : IUserService
             PartitionKey = tenantCode,
             RowKey = requestDto.Email,
             FullName = requestDto.FullName,
-            AccessRole = UserRoles.User.ToString()
+            AccessLevel = UserAccessLevel.User.ToString()
         };
 
         return await _userRepository.CreateAsync(newUserEntity);
@@ -81,19 +81,5 @@ public class UserService : IUserService
         }
 
         return await _userRepository.DeleteAsync(entityToDeleteResponse.Value!);
-    }
-
-    public async Task<UserRoles> GetUserRole(string tenantCode, string email)
-    {
-        ResultWrapper<UserEntity> tenantUser = await GetAsync(tenantCode, email);
-
-        if (tenantUser.Status == OperationStatus.Success)
-        {
-            return Enum.TryParse(tenantUser.Value!.AccessRole, out UserRoles userRole) ?
-                 userRole
-                 : UserRoles.Guest;
-        }
-
-        return UserRoles.Guest;
     }
 }

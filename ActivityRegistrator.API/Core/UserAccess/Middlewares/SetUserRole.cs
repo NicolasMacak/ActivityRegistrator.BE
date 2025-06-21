@@ -1,7 +1,7 @@
 ﻿using ActivityRegistrator.API.Service;
 using Microsoft.Extensions.Primitives;
 
-namespace ActivityRegistrator.API.Middlewares;
+namespace ActivityRegistrator.API.Core.UserAccess.Middlewares;
 public class SetUserRole
 {
     private const string TenantCodeName = "x-tenant-code";
@@ -12,13 +12,14 @@ public class SetUserRole
         _next = next;
     }
 
-    public async Task InvokeAsync(HttpContext context, IActiveUserService activeUserService) // functionality not tested. Post some user with role to the db
+    public async Task InvokeAsync(HttpContext context, IActiveUserService activeUserService)
     {
         StringValues tenantCode = context.Request.Headers[TenantCodeName];
+        string? email = context.User.GetEmail();
 
-        if (!string.IsNullOrEmpty(tenantCode))
+        if (!string.IsNullOrEmpty(tenantCode) && !string.IsNullOrEmpty(email))
         {
-            await activeUserService.SetUserProperties(tenantCode!, context.User.Claims); 
+            activeUserService.SetUserProperties(tenantCode!, email!); 
         }
 
         await _next(context);

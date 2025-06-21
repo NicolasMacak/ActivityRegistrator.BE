@@ -2,7 +2,9 @@ using Microsoft.Extensions.Azure;
 using ActivityRegistrator.API.Repositories;
 using ActivityRegistrator.API.Core.Extensions;
 using ActivityRegistrator.API.Service;
-using ActivityRegistrator.API.Middlewares;
+using Microsoft.AspNetCore.Authorization;
+using ActivityRegistrator.API.Core.UserAccess.Handlers;
+using ActivityRegistrator.API.Core.UserAccess.Middlewares;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -16,9 +18,11 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IEnvironmentService, EnvironmentService>();
 builder.Services.AddTransient<IEnvironmentRepository, EnvironmentRepository>();
 builder.Services.AddScoped<IActiveUserService, ActiveUserService>();
+builder.Services.AddScoped<IAuthorizationHandler, EndpointAccessHandler>();
 
 builder.AddAzureClients();
-builder.AddAzureB2CAuthorization();//todo rename to something better
+builder.AddAzureB2CAuthentification();//todo rename to something better
+builder.AddLevelAccessAuthorizationPolicies();
 
 builder.AddAutoMapper();
 

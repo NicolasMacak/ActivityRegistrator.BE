@@ -1,6 +1,4 @@
-﻿using ActivityRegistrator.Models.ObjectResults;
-
-namespace ActivityRegistrator.API.Core;
+﻿namespace ActivityRegistrator.API.Core.DataProcessing;
 public static class ObjectResultBuilder
 {
     public static PreconditionFailedObjectResult PreconditionFailed(object value)

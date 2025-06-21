@@ -1,6 +1,4 @@
 ﻿using System.Net;
-using ActivityRegistrator.API.Core;
-using ActivityRegistrator.API.Core.Constants;
 using ActivityRegistrator.API.Service;
 using ActivityRegistrator.Models.Dtoes;
 using ActivityRegistrator.Models.Entities;
@@ -9,13 +7,12 @@ using ActivityRegistrator.Models.Response;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Web.Resource;
-using static ActivityRegistrator.API.Core.ObjectResultBuilder;
+using static ActivityRegistrator.API.Core.DataProcessing.ObjectResultBuilder;
+using ActivityRegistrator.API.Core.UserAccess.Constants;
+using ActivityRegistrator.API.Core.DataProcessing;
 
 namespace ActivityRegistrator.API.Controllers;
 
-[Authorize]
-[RequiredScope(Scopes.Read, Scopes.Write)]
 [ApiController]
 [Route("[controller]")]
 public class UsersController : ControllerBase
@@ -33,6 +30,7 @@ public class UsersController : ControllerBase
         _mapper = mapper;
     }
 
+    [Authorize(Policy = UserAccessLevelPolicy.RootAccess)]
     [HttpGet]
     public async Task<IActionResult> GetListAsync()
     {
@@ -48,6 +46,7 @@ public class UsersController : ControllerBase
             count: response.Count));
     }
 
+    [Authorize(Policy = UserAccessLevelPolicy.TenantAdminAccess)]
     [HttpGet("{email}")]
     public async Task<IActionResult> GetAsync(string email)
     {

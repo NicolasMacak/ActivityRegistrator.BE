@@ -1,4 +1,4 @@
-﻿namespace ActivityRegistrator.API.Core;
+﻿namespace ActivityRegistrator.API.Core.DataProcessing;
 public static class ErrorBuilder
 {
     public static Dictionary<string, object> NotFoundError(Dictionary<string, object> parameters)
