@@ -1,7 +1,7 @@
 ﻿using ActivityRegistrator.API.Service;
 using Microsoft.Extensions.Primitives;
 
-namespace ActivityRegistrator.API.Core.Middlewares;
+namespace ActivityRegistrator.API.Middlewares;
 public class SetUserRole
 {
     private const string TenantCodeName = "x-tenant-code";
@@ -18,7 +18,7 @@ public class SetUserRole
 
         if (!string.IsNullOrEmpty(tenantCode))
         {
-            await activeUserService.SetUserProperties(tenantCode, context.User.Claims); 
+            await activeUserService.SetUserProperties(tenantCode!, context.User.Claims); 
         }
 
         await _next(context);

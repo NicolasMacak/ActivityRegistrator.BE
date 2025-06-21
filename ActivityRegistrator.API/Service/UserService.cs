@@ -48,7 +48,7 @@ public class UserService : IUserService
             PartitionKey = tenantCode,
             RowKey = requestDto.Email,
             FullName = requestDto.FullName,
-            AccessRole = (int) UserRoles.User
+            AccessRole = UserRoles.User.ToString()
         };
 
         return await _userRepository.CreateAsync(newUserEntity);

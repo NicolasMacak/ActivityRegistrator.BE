@@ -8,5 +8,8 @@ public interface IActiveUserService
     public string Email { get; }
     public UserRoles ActiveUserRole { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public Task SetUserProperties(string tenantCode, IEnumerable<Claim> claims);
 }

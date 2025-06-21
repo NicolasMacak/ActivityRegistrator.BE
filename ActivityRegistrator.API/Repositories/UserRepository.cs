@@ -1,5 +1,4 @@
-﻿using ActivityRegistrator.API.Core.Repositories;
-using ActivityRegistrator.Models.Entities;
+﻿using ActivityRegistrator.Models.Entities;
 using Azure.Data.Tables;
 
 namespace ActivityRegistrator.API.Repositories;

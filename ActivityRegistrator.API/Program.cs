@@ -2,7 +2,7 @@ using Microsoft.Extensions.Azure;
 using ActivityRegistrator.API.Repositories;
 using ActivityRegistrator.API.Core.Extensions;
 using ActivityRegistrator.API.Service;
-using ActivityRegistrator.API.Core.Middlewares;
+using ActivityRegistrator.API.Middlewares;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 

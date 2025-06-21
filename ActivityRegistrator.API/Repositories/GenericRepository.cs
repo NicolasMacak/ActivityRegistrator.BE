@@ -4,7 +4,7 @@ using ActivityRegistrator.Models.Response;
 using Azure;
 using Azure.Data.Tables;
 
-namespace ActivityRegistrator.API.Core.Repositories;
+namespace ActivityRegistrator.API.Repositories;
 public class GenericRepository<Entity> where Entity : class, ITableEntity
 {
     private readonly ILogger<GenericRepository<Entity>> _logger;

@@ -1,9 +1,14 @@
 ﻿namespace ActivityRegistrator.API.Core.Enums;
 public enum UserRoles
 {
-    Root = 0, // Super admin, manages all Tenants
-    TenantAdmin = 1, // Manages tenant data
-    DelegatedAdmin = 2, // Manages tenant data, but not all
-    User = 3, // Regular user, manages only their own data
-    Guest = 4 // Has no account
+    /// <summary> Super admin, manages all Tenants </summary>
+    Root = 0,
+    /// <summary> Manages tenant data </summary>
+    TenantAdmin = 1,
+    /// <summary> Manages tenant data, but not all </summary>
+    DelegatedAdmin = 2,
+    /// <summary> Regular user, manages only their own data </summary>
+    User = 3,
+    /// <summary> Has not account. Access to non-tenant related data </summary>
+    Guest = 4
 }

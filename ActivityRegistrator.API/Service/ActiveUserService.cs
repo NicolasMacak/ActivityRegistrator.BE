@@ -8,13 +8,11 @@ public class ActiveUserService : IActiveUserService
 {
     private const string EmailKeyInClams = "emails";
 
-    private readonly ILogger<ActiveUserService> _logger;
     private readonly IUserService _userService;
 
-    public ActiveUserService(ILogger<ActiveUserService> logger, IUserService userService)
+    public ActiveUserService(IUserService userService)
     {
         _userService = userService;
-        _logger = logger;
     }
 
     public string TenantCode { get; private set; } = string.Empty;
@@ -28,13 +26,18 @@ public class ActiveUserService : IActiveUserService
         ActiveUserRole = await GetUserRole();
     }
 
+    /// <summary>
+    /// Returns role of the user. If user is not found or his role could not be parsed out, returns <see cref="UserRoles.Guest"/> role.
+    /// </summary>
     private async Task<UserRoles> GetUserRole()
     {
         ResultWrapper<UserEntity> tenantUser = await _userService.GetAsync(TenantCode, Email);
 
-        if (tenantUser.Status == OperationStatus.Success) // Failure or not found
+        if (tenantUser.Status == OperationStatus.Success)
         {
-            return (UserRoles) tenantUser.Value!.AccessRole;
+            return Enum.TryParse(tenantUser.Value!.AccessRole, out UserRoles userRole) ?
+                 userRole
+                 : UserRoles.Guest;
         }
 
         return UserRoles.Guest;
