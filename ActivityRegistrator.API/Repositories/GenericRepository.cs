@@ -4,6 +4,7 @@ using ActivityRegistrator.API.Core.DataProcessing.Model;
 using ActivityRegistrator.API.Core.Extensions;
 using Azure;
 using Azure.Data.Tables;
+using Optional;
 
 namespace ActivityRegistrator.API.Repositories;
 public class GenericRepository<Entity> where Entity : class, ITableEntity
@@ -18,47 +19,19 @@ public class GenericRepository<Entity> where Entity : class, ITableEntity
     }
 
     /// <inheritdoc/>
-    public async Task<ResultListWrapper<Entity>> GetListAsync(string tenantCode)
+    public async Task<List<Entity>> GetListAsync(string tenantCode)
     {
-        ResultListWrapper<Entity> response = new();
-
-        try
-        {
-            List<Entity> result = await _tableClient
-                .QueryAsync<Entity>(x => x.PartitionKey == tenantCode)
-                .ToListAsync();
-
-            return response.With(result);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred while creating a new user");
-            return response.With(OperationStatus.Failure);
-        }
+        return await _tableClient
+            .QueryAsync<Entity>(x => x.PartitionKey == tenantCode)
+            .ToListAsync();
     }
 
     /// <inheritdoc/>
-    public async Task<ResultWrapper<Entity>> GetAsync(string partitionKey, string rowKey)
+    public async Task<Option<Entity>> GetAsync(string partitionKey, string rowKey)
     {
-        ResultWrapper<Entity> response = new();
+        NullableResponse<Entity> azureResponse = await _tableClient.GetEntityIfExistsAsync<Entity>(partitionKey, rowKey);
 
-        try
-        {
-            NullableResponse<Entity> maybeEntity = await _tableClient.GetEntityIfExistsAsync<Entity>(partitionKey, rowKey);
-            if (maybeEntity.HasValue)
-            {
-                return response.With(maybeEntity.Value!);
-            }
-            else
-            {
-                _logger.LogError("User not found. tenantCode: {TenantCode}, email: {email}", partitionKey, rowKey);
-                return response.With(OperationStatus.NotFound);
-            }
-        }
-        catch(Exception ex){
-            _logger.LogError(ex, "An error occurred while getting the user");
-            return response.With(OperationStatus.Failure);
-        }
+        return azureResponse.ToOption();
     }
 
     /// <inheritdoc/>

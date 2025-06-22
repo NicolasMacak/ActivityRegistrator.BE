@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ActivityRegistrator.API.Core.DataProcessing;
+namespace ActivityRegistrator.API.Core.DataProcessing.Model;
 [Obsolete("Do we really need this")]
 public class PreconditionFailedObjectResult : ObjectResult
 {

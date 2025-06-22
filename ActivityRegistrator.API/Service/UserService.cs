@@ -4,6 +4,7 @@ using ActivityRegistrator.Models.Request;
 using ActivityRegistrator.API.Core.Security.Enums;
 using ActivityRegistrator.API.Core.DataProcessing.Enums;
 using ActivityRegistrator.API.Core.DataProcessing.Model;
+using Optional;
 
 namespace ActivityRegistrator.API.Service;
 public class UserService : IUserService // TenantAdmin service
@@ -20,19 +21,48 @@ public class UserService : IUserService // TenantAdmin service
     }
 
     /// <inheritdoc/>
-    public async Task<ResultListWrapper<UserEntity>> GetListAsync(string tenantCode)
+    public async Task<ResultListWrapper<UserEntity>> GetListAsync()
     {
-        return await _userRepository.GetListAsync(_activeUserService.TenantCode);
+        try
+        {
+            List<UserEntity> userEntities = await _userRepository.GetListAsync(_activeUserService.TenantCode);
+
+            return new ResultListWrapper<UserEntity>
+            {
+                Values = userEntities,
+                Count = userEntities.Count,
+                Status = OperationStatus.Success
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while retrieving the user list for tenant: {TenantCode}", _activeUserService.TenantCode);
+            return new ResultListWrapper<UserEntity>().With(OperationStatus.Failure);
+        }
+
     }
 
     /// <inheritdoc/>
-    public async Task<ResultWrapper<UserEntity>> GetAsync(string tenantCode, string email)
+    public async Task<ResultWrapper<UserEntity>> GetAsync(string email)
     {
-        return await _userRepository.GetAsync(_activeUserService.TenantCode, email);
+        try
+        {
+            Option<UserEntity> optionUser = await _userRepository.GetAsync(_activeUserService.TenantCode, email);
+
+            return optionUser.Match(
+                some: user => new ResultWrapper<UserEntity>().With(user),
+                none: () => new ResultWrapper<UserEntity>().With(OperationStatus.NotFound)
+            );
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while retrieving user with email: {Email} for tenant: {TenantCode}", email, _activeUserService.TenantCode);
+            return new ResultWrapper<UserEntity>().With(OperationStatus.Failure);
+        }
     }
 
     /// <inheritdoc/>
-    public async Task<ResultWrapper<UserEntity>> CreateAsync(string tenantCode, CreateUserRequestDto requestDto)
+    public async Task<ResultWrapper<UserEntity>> CreateAsync(CreateUserRequestDto requestDto)
     {
         ResultWrapper<UserEntity> responseOfEntityToUpdate = await _userRepository.GetAsync(_activeUserService.TenantCode, requestDto.Email);
 
@@ -58,7 +88,7 @@ public class UserService : IUserService // TenantAdmin service
     }
 
     /// <inheritdoc/>
-    public async Task<ResultWrapper<UserEntity>> UpdateAsync(string tenantCode, string email, UpdateUserRequestDto request)
+    public async Task<ResultWrapper<UserEntity>> UpdateAsync(string email, UpdateUserRequestDto request)
     {
         ResultWrapper<UserEntity> responseOfEntityToUpdate = await _userRepository.GetAsync(tenantCode, email);
 
@@ -75,7 +105,7 @@ public class UserService : IUserService // TenantAdmin service
     }
 
     /// <inheritdoc/>
-    public async Task<ResultWrapper<UserEntity>> DeleteAsync(string tenantCode, string email)
+    public async Task<ResultWrapper<UserEntity>> DeleteAsync(string email)
     {
         ResultWrapper<UserEntity> entityToDeleteResponse = await _userRepository.GetAsync(tenantCode, email);
         if (entityToDeleteResponse.Status != OperationStatus.Success)

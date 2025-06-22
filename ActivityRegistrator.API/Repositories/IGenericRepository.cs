@@ -1,5 +1,6 @@
 ﻿using ActivityRegistrator.API.Core.DataProcessing.Model;
 using Azure;
+using Optional;
 
 namespace ActivityRegistrator.API.Repositories;
 /// <summary>
@@ -14,7 +15,7 @@ public interface IGenericRepository<Entity>
     /// <returns>
     /// 200: Success <br></br>
     /// </returns>
-    public Task<ResultListWrapper<Entity>> GetListAsync(string tenantCode);
+    public Task<List<Entity>> GetListAsync(string tenantCode);
     /// <summary>
     /// Returns record
     /// </summary>
@@ -22,7 +23,7 @@ public interface IGenericRepository<Entity>
     /// 200: Success <br></br>
     /// 404: Entity not present in the database
     /// </returns>
-    public Task<ResultWrapper<Entity>> GetAsync(string partitionKey, string rowKey);
+    public Task<Option<Entity>> GetAsync(string partitionKey, string rowKey);
     /// <summary>
     /// Creates new entity and adds it to the database
     /// </summary>

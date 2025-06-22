@@ -6,11 +6,11 @@ using ActivityRegistrator.Models.Request;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static ActivityRegistrator.API.Core.DataProcessing.ObjectResultBuilder;
+using static ActivityRegistrator.API.Core.DataProcessing.Builders.ObjectResultBuilder;
 using ActivityRegistrator.API.Core.Security.Constants;
-using ActivityRegistrator.API.Core.DataProcessing;
 using ActivityRegistrator.API.Core.DataProcessing.Enums;
 using ActivityRegistrator.API.Core.DataProcessing.Model;
+using ActivityRegistrator.API.Core.DataProcessing.Builders;
 
 namespace ActivityRegistrator.API.Controllers;
 
@@ -21,8 +21,6 @@ public class UsersController : ControllerBase
     private readonly ILogger<UsersController> _logger;
     private readonly IUserService _userService;
     private readonly IMapper _mapper;
-
-    private const string TenantCode = "TangoVida";
 
     public UsersController(ILogger<UsersController> logger, IUserService userService, IMapper mapper)
     {
@@ -35,7 +33,7 @@ public class UsersController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetListAsync()
     {
-        ResultListWrapper<UserEntity> response = await _userService.GetListAsync(TenantCode);
+        ResultListWrapper<UserEntity> response = await _userService.GetListAsync();
 
         if(response.Status != OperationStatus.Success)
         {
@@ -51,7 +49,7 @@ public class UsersController : ControllerBase
     [HttpGet("{email}")]
     public async Task<IActionResult> GetAsync(string email)
     {
-        ResultWrapper<UserEntity> response = await _userService.GetAsync(TenantCode, email);
+        ResultWrapper<UserEntity> response = await _userService.GetAsync(email);
 
         return response.Status switch
         {
@@ -72,7 +70,7 @@ public class UsersController : ControllerBase
             return BadRequest("Person data cannot be null");
         }
 
-        ResultWrapper<UserEntity> response = await _userService.CreateAsync(TenantCode, requestDto);
+        ResultWrapper<UserEntity> response = await _userService.CreateAsync(requestDto);
 
         return response.Status switch
         {
@@ -93,7 +91,7 @@ public class UsersController : ControllerBase
             return BadRequest("User data cannot be null");
         }
 
-        ResultWrapper<UserEntity> response = await _userService.UpdateAsync(TenantCode, email, requestDto);
+        ResultWrapper<UserEntity> response = await _userService.UpdateAsync(email, requestDto);
 
         return response.Status switch
         {
@@ -109,7 +107,7 @@ public class UsersController : ControllerBase
     [HttpDelete("{email}")]
     public async Task<IActionResult> Delete(string email)
     {
-        ResultWrapper<UserEntity> response = await _userService.DeleteAsync(TenantCode, email);
+        ResultWrapper<UserEntity> response = await _userService.DeleteAsync(email);
 
         return response.Status switch
         {

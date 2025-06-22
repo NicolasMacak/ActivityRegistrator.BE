@@ -1,5 +1,4 @@
 ﻿using ActivityRegistrator.API.Controllers;
-using ActivityRegistrator.API.Core.DataProcessing;
 using ActivityRegistrator.API.Core.DataProcessing.Enums;
 using ActivityRegistrator.API.Core.DataProcessing.Model;
 using ActivityRegistrator.API.Repositories;
