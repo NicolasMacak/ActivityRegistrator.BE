@@ -1,4 +1,4 @@
-﻿namespace ActivityRegistrator.API.Core.UserAccess.Constants;
+﻿namespace ActivityRegistrator.API.Core.Security.Constants;
 /// <summary>
 /// Authorized access comes through Web Api reigstration. There, defined scopes differenent kind of access to the api
 /// </summary>

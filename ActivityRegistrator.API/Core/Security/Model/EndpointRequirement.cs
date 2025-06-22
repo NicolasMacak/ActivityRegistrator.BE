@@ -1,4 +1,4 @@
-﻿using ActivityRegistrator.API.Core.UserAccess.Enums;
+﻿using ActivityRegistrator.API.Core.Security.Enums;
 using Microsoft.AspNetCore.Authorization;
 
 public class EndpointRequirement : IAuthorizationRequirement

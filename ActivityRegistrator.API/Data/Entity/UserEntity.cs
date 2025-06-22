@@ -1,5 +1,5 @@
 ﻿using System.Runtime.Serialization;
-using ActivityRegistrator.API.Core.UserAccess.Enums;
+using ActivityRegistrator.API.Core.Security.Enums;
 using Azure;
 using Azure.Data.Tables;
 

@@ -6,8 +6,8 @@ using Azure.Security.KeyVault.Secrets;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Azure;
 using Microsoft.Identity.Web;
-using ActivityRegistrator.API.Core.UserAccess.Enums;
-using ActivityRegistrator.API.Core.UserAccess.Constants;
+using ActivityRegistrator.API.Core.Security.Enums;
+using ActivityRegistrator.API.Core.Security.Constants;
 using ActivityRegistrator.API.Core.Configuration;
 
 namespace ActivityRegistrator.API.Core.Configuration;
@@ -49,6 +49,9 @@ public static class WebApplicationBuilderExtensions
         });
     }
 
+    /// <summary>
+    /// Adds Azure B2C authentication to the <see cref="WebApplicationBuilder.Services"/> 
+    /// </summary>
     public static void AddAzureB2CAuthentification(this WebApplicationBuilder builder)
     {
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -59,6 +62,9 @@ public static class WebApplicationBuilderExtensions
             options => { builder.Configuration.Bind("AzureAdB2C", options); });
     }
 
+    /// <summary>
+    /// Adds authorization policies based on user access level to the <see cref="WebApplicationBuilder.Services"/>
+    /// </summary>
     public static void AddLevelAccessAuthorizationPolicies(this WebApplicationBuilder builder)
     {
         builder.Services.AddAuthorization(options =>

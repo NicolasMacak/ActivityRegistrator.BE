@@ -1,7 +1,7 @@
 ﻿using ActivityRegistrator.Models.Entities;
 using ActivityRegistrator.Models.Request;
-using ActivityRegistrator.Models.Response;
 using ActivityRegistrator.API.Repositories;
+using ActivityRegistrator.API.Core.DataProcessing.Model;
 
 namespace ActivityRegistrator.API.Service;
 public interface IUserService

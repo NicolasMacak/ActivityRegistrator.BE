@@ -8,7 +8,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static ActivityRegistrator.API.Core.DataProcessing.ObjectResultBuilder;
-using ActivityRegistrator.API.Core.UserAccess.Constants;
+using ActivityRegistrator.API.Core.Security.Constants;
 using ActivityRegistrator.API.Core.DataProcessing;
 
 namespace ActivityRegistrator.API.Controllers;

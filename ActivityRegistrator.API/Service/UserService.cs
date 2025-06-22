@@ -2,7 +2,7 @@
 using ActivityRegistrator.Models.Response;
 using ActivityRegistrator.API.Repositories;
 using ActivityRegistrator.Models.Request;
-using ActivityRegistrator.API.Core.UserAccess.Enums;
+using ActivityRegistrator.API.Core.Security.Enums;
 
 namespace ActivityRegistrator.API.Service;
 public class UserService : IUserService

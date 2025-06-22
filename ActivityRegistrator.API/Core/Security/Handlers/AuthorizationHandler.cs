@@ -1,11 +1,11 @@
-﻿using ActivityRegistrator.API.Core.UserAccess.Enums;
+﻿using ActivityRegistrator.API.Core.Security.Enums;
 using ActivityRegistrator.API.Service;
 using ActivityRegistrator.Models.Entities;
 using ActivityRegistrator.Models.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Primitives;
 
-namespace ActivityRegistrator.API.Core.UserAccess.Handlers
+namespace ActivityRegistrator.API.Core.Security.Handlers
 {
     public class EndpointAccessHandler : AuthorizationHandler<EndpointRequirement> //todo. Token lifetime set to 6 hours. Change after developement
     {

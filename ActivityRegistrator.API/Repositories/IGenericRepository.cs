@@ -1,4 +1,4 @@
-﻿using ActivityRegistrator.Models.Response;
+﻿using ActivityRegistrator.API.Core.DataProcessing.Model;
 using Azure;
 
 namespace ActivityRegistrator.API.Repositories;

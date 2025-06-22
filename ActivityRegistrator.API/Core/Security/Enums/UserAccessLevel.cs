@@ -1,4 +1,4 @@
-﻿namespace ActivityRegistrator.API.Core.UserAccess.Enums;
+﻿namespace ActivityRegistrator.API.Core.Security.Enums;
 public enum UserAccessLevel
 {
     /// <summary> Super admin, manages all Tenants </summary>

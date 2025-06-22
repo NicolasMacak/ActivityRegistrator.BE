@@ -1,7 +1,7 @@
 ﻿using ActivityRegistrator.API.Service;
 using Microsoft.Extensions.Primitives;
 
-namespace ActivityRegistrator.API.Core.UserAccess.Middlewares;
+namespace ActivityRegistrator.API.Core.Security.Middlewares;
 public class SetUserRole
 {
     private const string TenantCodeName = "x-tenant-code";

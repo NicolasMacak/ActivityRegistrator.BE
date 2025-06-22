@@ -1,6 +1,7 @@
 ﻿using System.Net;
+using ActivityRegistrator.API.Core.DataProcessing.Enums;
+using ActivityRegistrator.API.Core.DataProcessing.Model;
 using ActivityRegistrator.API.Core.Extensions;
-using ActivityRegistrator.Models.Response;
 using Azure;
 using Azure.Data.Tables;
 
