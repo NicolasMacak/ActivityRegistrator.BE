@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ActivityRegistrator.API.Core.DataProcessing.Enums;
+using Microsoft.AspNetCore.Http;
 
-namespace ActivityRegistrator.Models.Response;
+namespace ActivityRegistrator.API.Core.DataProcessing.Model;
 /// <summary>
 /// May contain Value of type <see cref="T"/> and <see cref="OperationStatus"/> providing information about operation execution
 /// </summary>

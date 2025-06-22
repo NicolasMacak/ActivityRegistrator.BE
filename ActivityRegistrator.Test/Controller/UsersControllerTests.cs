@@ -31,7 +31,7 @@ public class UsersControllerTests
         });
         IMapper autoMapper = configuration.CreateMapper();
 
-        UserService userService = new(new Mock<ILogger<UserService>>().Object, _repositoryMock.Object);
+        TenantAdminService userService = new(new Mock<ILogger<TenantAdminService>>().Object, _repositoryMock.Object);
         _testee = new UsersController(new Mock<ILogger<UsersController>>().Object, userService, autoMapper);
     }
 

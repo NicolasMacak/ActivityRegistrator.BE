@@ -1,4 +1,4 @@
-﻿namespace ActivityRegistrator.Models.Response;
+﻿namespace ActivityRegistrator.API.Core.DataProcessing.Enums;
 public enum OperationStatus
 {
     Failure,

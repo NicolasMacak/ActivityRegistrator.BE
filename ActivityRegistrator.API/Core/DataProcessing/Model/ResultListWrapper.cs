@@ -1,4 +1,6 @@
-﻿namespace ActivityRegistrator.Models.Response;
+﻿using ActivityRegistrator.API.Core.DataProcessing.Enums;
+
+namespace ActivityRegistrator.API.Core.DataProcessing.Model;
 /// <summary>
 /// May contain Values of type <see cref="T"/> and <see cref="OperationStatus"/> providing information about operation execution
 /// </summary>

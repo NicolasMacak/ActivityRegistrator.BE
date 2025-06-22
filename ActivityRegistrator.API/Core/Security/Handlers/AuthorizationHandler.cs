@@ -1,7 +1,8 @@
-﻿using ActivityRegistrator.API.Core.Security.Enums;
+﻿using ActivityRegistrator.API.Core.DataProcessing.Enums;
+using ActivityRegistrator.API.Core.DataProcessing.Model;
+using ActivityRegistrator.API.Core.Security.Enums;
 using ActivityRegistrator.API.Service;
 using ActivityRegistrator.Models.Entities;
-using ActivityRegistrator.Models.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Primitives;
 
