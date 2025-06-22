@@ -1,17 +1,15 @@
 ﻿using ActivityRegistrator.API.Core.DataProcessing.Enums;
-using Microsoft.AspNetCore.Http;
-
 namespace ActivityRegistrator.API.Core.DataProcessing.Model;
 /// <summary>
 /// May contain Value of type <see cref="T"/> and <see cref="OperationStatus"/> providing information about operation execution
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class ResultWrapper<T>
+public class ServiceResult<T>
 {
-    public T? Value { get; set; }
-    public OperationStatus Status { get; set; }
+    public T? Value { get; private set; }
+    public OperationStatus Status { get; private set; }
 
-    public ResultWrapper<T> With(T value, OperationStatus status)
+    public ServiceResult<T> With(T value, OperationStatus status)
     {
         Value = value;
         Status = status;
@@ -19,7 +17,7 @@ public class ResultWrapper<T>
         return this;
     }
 
-    public ResultWrapper<T> With(T value)
+    public ServiceResult<T> With(T value)
     {
         Value = value;
         Status = OperationStatus.Success;
@@ -27,7 +25,7 @@ public class ResultWrapper<T>
         return this;
     }
 
-    public ResultWrapper<T> With(OperationStatus status)
+    public ServiceResult<T> With(OperationStatus status)
     {
         Status = status;
 

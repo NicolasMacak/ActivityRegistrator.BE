@@ -6,13 +6,13 @@ using ActivityRegistrator.API.Core.DataProcessing.Model;
 namespace ActivityRegistrator.API.Service;
 public interface IUserService
 {
-    public Task<ResultListWrapper<UserEntity>> GetListAsync();
+    public Task<ServiceListResult<UserEntity>> GetListAsync();
 
-    public Task<ResultWrapper<UserEntity>> GetAsync(string email);
+    public Task<ServiceResult<UserEntity>> GetAsync(string email);
 
-    public Task<ResultWrapper<UserEntity>> CreateAsync(CreateUserRequestDto requestDto);
+    public Task<ServiceResult<UserEntity>> CreateAsync(CreateUserRequestDto requestDto);
 
-    public Task<ResultWrapper<UserEntity>> UpdateAsync(string email, UpdateUserRequestDto request);
+    public Task<ServiceResult<UserEntity>> UpdateAsync(string email, UpdateUserRequestDto request);
 
-    public Task<ResultWrapper<UserEntity>> DeleteAsync(string email);
+    public Task<ServiceResult<UserEntity>> DeleteAsync(string email);
 }

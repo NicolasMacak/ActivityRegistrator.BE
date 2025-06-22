@@ -5,6 +5,9 @@ using ActivityRegistrator.API.Core.Security.Enums;
 using ActivityRegistrator.API.Core.DataProcessing.Enums;
 using ActivityRegistrator.API.Core.DataProcessing.Model;
 using Optional;
+using Optional.Unsafe;
+using Azure;
+using System.Net;
 
 namespace ActivityRegistrator.API.Service;
 public class UserService : IUserService // TenantAdmin service
@@ -21,13 +24,13 @@ public class UserService : IUserService // TenantAdmin service
     }
 
     /// <inheritdoc/>
-    public async Task<ResultListWrapper<UserEntity>> GetListAsync()
+    public async Task<ServiceListResult<UserEntity>> GetListAsync()
     {
         try
         {
             List<UserEntity> userEntities = await _userRepository.GetListAsync(_activeUserService.TenantCode);
 
-            return new ResultListWrapper<UserEntity>
+            return new ServiceListResult<UserEntity>
             {
                 Values = userEntities,
                 Count = userEntities.Count,
@@ -37,82 +40,131 @@ public class UserService : IUserService // TenantAdmin service
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred while retrieving the user list for tenant: {TenantCode}", _activeUserService.TenantCode);
-            return new ResultListWrapper<UserEntity>().With(OperationStatus.Failure);
+            return new ServiceListResult<UserEntity>().With(OperationStatus.Failure);
         }
 
     }
 
     /// <inheritdoc/>
-    public async Task<ResultWrapper<UserEntity>> GetAsync(string email)
+    public async Task<ServiceResult<UserEntity>> GetAsync(string email)
     {
         try
         {
             Option<UserEntity> optionUser = await _userRepository.GetAsync(_activeUserService.TenantCode, email);
 
             return optionUser.Match(
-                some: user => new ResultWrapper<UserEntity>().With(user),
-                none: () => new ResultWrapper<UserEntity>().With(OperationStatus.NotFound)
+                some: user => new ServiceResult<UserEntity>().With(user),
+                none: () => new ServiceResult<UserEntity>().With(OperationStatus.NotFound)
             );
         }
         catch(Exception ex)
         {
             _logger.LogError(ex, "An error occurred while retrieving user with email: {Email} for tenant: {TenantCode}", email, _activeUserService.TenantCode);
-            return new ResultWrapper<UserEntity>().With(OperationStatus.Failure);
+            return new ServiceResult<UserEntity>().With(OperationStatus.Failure);
         }
     }
 
     /// <inheritdoc/>
-    public async Task<ResultWrapper<UserEntity>> CreateAsync(CreateUserRequestDto requestDto)
+    public async Task<ServiceResult<UserEntity>> CreateAsync(CreateUserRequestDto requestDto)
     {
-        ResultWrapper<UserEntity> responseOfEntityToUpdate = await _userRepository.GetAsync(_activeUserService.TenantCode, requestDto.Email);
-
-        if (responseOfEntityToUpdate.Status == OperationStatus.Success)
+        try
         {
-            _logger.LogError("Such resource already exists. request: {requestDto}", requestDto.ToString());
-            return new ResultWrapper<UserEntity>().With(OperationStatus.UniqueConstraintViolation);
+            Option<UserEntity> existingUser = await _userRepository.GetAsync(_activeUserService.TenantCode, requestDto.Email);
+
+            if (existingUser.HasValue)
+            {
+                _logger.LogError("Such resource already exists. request: {requestDto}", requestDto.ToString());
+                return new ServiceResult<UserEntity>().With(OperationStatus.UniqueConstraintViolation);
+            }
+
+            UserEntity newUserEntity = new()
+            {
+                PartitionKey = _activeUserService.TenantCode,
+                RowKey = requestDto.Email,
+                FullName = requestDto.FullName,
+                AccessLevel = UserAccessLevel.User.ToString()
+            };
+
+            await _userRepository.CreateAsync(newUserEntity);
+
+            Option<UserEntity> createdUser = await _userRepository.GetAsync(_activeUserService.TenantCode, requestDto.Email);
+
+            return createdUser.Match(
+                some: user => new ServiceResult<UserEntity>().With(user),
+                none: () => new ServiceResult<UserEntity>().With(OperationStatus.Failure)
+            );
         }
-        else if (responseOfEntityToUpdate.Status == OperationStatus.Failure)
+        catch (Exception ex)
         {
-            return responseOfEntityToUpdate;
+            _logger.LogError(ex, "An error occurred while checking for existing user with email: {Email} for tenant: {TenantCode}", requestDto.Email, _activeUserService.TenantCode);
+            return new ServiceResult<UserEntity>().With(OperationStatus.Failure);
         }
 
-        UserEntity newUserEntity = new()
-        {
-            PartitionKey = tenantCode,
-            RowKey = requestDto.Email,
-            FullName = requestDto.FullName,
-            AccessLevel = UserAccessLevel.User.ToString()
-        };
-
-        return await _userRepository.CreateAsync(newUserEntity);
     }
 
     /// <inheritdoc/>
-    public async Task<ResultWrapper<UserEntity>> UpdateAsync(string email, UpdateUserRequestDto request)
+    public async Task<ServiceResult<UserEntity>> UpdateAsync(string email, UpdateUserRequestDto request)
     {
-        ResultWrapper<UserEntity> responseOfEntityToUpdate = await _userRepository.GetAsync(tenantCode, email);
-
-        if(responseOfEntityToUpdate.Status != OperationStatus.Success)
+        try
         {
-            return responseOfEntityToUpdate;
+            Option<UserEntity> existingUser = await _userRepository.GetAsync(_activeUserService.TenantCode, email);
+
+            if (!existingUser.HasValue)
+            {
+                _logger.LogWarning("User not found for update: {Email}", email);
+                return new ServiceResult<UserEntity>().With(OperationStatus.NotFound);
+            }
+
+            UserEntity userToUpdate = existingUser.ValueOrDefault();
+
+            userToUpdate.FullName = request.FullName;
+
+            await _userRepository.UpdateAsync(_activeUserService.TenantCode, request.ETag, userToUpdate);
+
+            Option<UserEntity> updatedUser = await _userRepository.GetAsync(_activeUserService.TenantCode, email);
+
+            return new ServiceResult<UserEntity>().With(updatedUser.ValueOrFailure());
         }
+        catch (RequestFailedException requestFailedException)
+        {
+            if (requestFailedException.Status == (int)HttpStatusCode.PreconditionFailed) // Already updated
+            {
+                _logger.LogError(requestFailedException, "Record was already updated. partitionKey: {partitionKey}, rowkey: {rowKey}", _activeUserService.TenantCode, email);
+                return new ServiceResult<UserEntity>().With(OperationStatus.AlreadyUpdated);
+            }
 
-        UserEntity entityToUpdate = responseOfEntityToUpdate.Value!;
-
-        entityToUpdate.FullName = request.FullName;
-
-        return await _userRepository.Update(email, request.ETag, entityToUpdate);
+            _logger.LogError(requestFailedException, "An error occurred while updating the user");
+            return new ServiceResult<UserEntity>().With(OperationStatus.Failure);
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while updating user with email: {Email} for tenant: {TenantCode}", email, _activeUserService.TenantCode);
+            return new ServiceResult<UserEntity>().With(OperationStatus.Failure);
+        }
     }
 
     /// <inheritdoc/>
-    public async Task<ResultWrapper<UserEntity>> DeleteAsync(string email)
+    public async Task<ServiceResult<UserEntity>> DeleteAsync(string email)
     {
-        ResultWrapper<UserEntity> entityToDeleteResponse = await _userRepository.GetAsync(tenantCode, email);
-        if (entityToDeleteResponse.Status != OperationStatus.Success)
+        try
         {
-            return entityToDeleteResponse;
-        }
+            Option<UserEntity> optionUser = await _userRepository.GetAsync(_activeUserService.TenantCode, email);
 
-        return await _userRepository.DeleteAsync(entityToDeleteResponse.Value!);
+            return await optionUser.Match(
+                some: async userToDelete =>
+                {
+                    await _userRepository.DeleteAsync(userToDelete);
+                    return new ServiceResult<UserEntity>().With(OperationStatus.Success);
+                },
+                none: () => {
+                    return Task.FromResult(new ServiceResult<UserEntity>().With(OperationStatus.Success));
+                }
+            );
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex,"An error occurred while updating user with email: {Email} for tenant: {TenantCode}", email, _activeUserService.TenantCode);
+            return new ServiceResult<UserEntity>().With(OperationStatus.Failure);
+        }
     }
 }

@@ -49,7 +49,7 @@ namespace ActivityRegistrator.API.Core.Security.Handlers
 
         private async Task<UserAccessLevel> GetUserAccessLevel(string tenantCode, string email)
         {
-            ResultWrapper<UserEntity> tenantUser = await _userService.GetAsync(tenantCode, email);
+            ServiceResult<UserEntity> tenantUser = await _userService.GetAsync(tenantCode, email);
 
             if (tenantUser.Status == OperationStatus.Success)
             {

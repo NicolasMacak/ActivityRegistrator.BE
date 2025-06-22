@@ -14,6 +14,7 @@ using ActivityRegistrator.API.Core.DataProcessing.Builders;
 
 namespace ActivityRegistrator.API.Controllers;
 
+[Authorize(Policy = UserAccessLevelPolicy.TenantAdminAccess)]
 [ApiController]
 [Route("[controller]")]
 public class UsersController : ControllerBase
@@ -29,11 +30,10 @@ public class UsersController : ControllerBase
         _mapper = mapper;
     }
 
-    [Authorize(Policy = UserAccessLevelPolicy.RootAccess)]
     [HttpGet]
     public async Task<IActionResult> GetListAsync()
     {
-        ResultListWrapper<UserEntity> response = await _userService.GetListAsync();
+        ServiceListResult<UserEntity> response = await _userService.GetListAsync();
 
         if(response.Status != OperationStatus.Success)
         {
@@ -45,11 +45,10 @@ public class UsersController : ControllerBase
             count: response.Count));
     }
 
-    [Authorize(Policy = UserAccessLevelPolicy.TenantAdminAccess)]
     [HttpGet("{email}")]
     public async Task<IActionResult> GetAsync(string email)
     {
-        ResultWrapper<UserEntity> response = await _userService.GetAsync(email);
+        ServiceResult<UserEntity> response = await _userService.GetAsync(email);
 
         return response.Status switch
         {
@@ -70,7 +69,7 @@ public class UsersController : ControllerBase
             return BadRequest("Person data cannot be null");
         }
 
-        ResultWrapper<UserEntity> response = await _userService.CreateAsync(requestDto);
+        ServiceResult<UserEntity> response = await _userService.CreateAsync(requestDto);
 
         return response.Status switch
         {
@@ -91,7 +90,7 @@ public class UsersController : ControllerBase
             return BadRequest("User data cannot be null");
         }
 
-        ResultWrapper<UserEntity> response = await _userService.UpdateAsync(email, requestDto);
+        ServiceResult<UserEntity> response = await _userService.UpdateAsync(email, requestDto);
 
         return response.Status switch
         {
@@ -107,7 +106,7 @@ public class UsersController : ControllerBase
     [HttpDelete("{email}")]
     public async Task<IActionResult> Delete(string email)
     {
-        ResultWrapper<UserEntity> response = await _userService.DeleteAsync(email);
+        ServiceResult<UserEntity> response = await _userService.DeleteAsync(email);
 
         return response.Status switch
         {

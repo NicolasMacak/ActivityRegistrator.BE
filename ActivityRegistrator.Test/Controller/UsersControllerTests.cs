@@ -39,7 +39,7 @@ public class UsersControllerTests
     {
         // Arrange
         _repositoryMock.Setup(x => x.GetListAsync(It.IsAny<string>()))
-            .ReturnsAsync(new ResultListWrapper<UserEntity>().With(new List<UserEntity>() { GetTestUserEntity() }));
+            .ReturnsAsync(new ServiceListResult<UserEntity>().With(new List<UserEntity>() { GetTestUserEntity() }));
 
         // Act
         IActionResult result = await _testee.GetListAsync();
@@ -62,7 +62,7 @@ public class UsersControllerTests
     {
         // Arrange
         _repositoryMock.Setup(x => x.GetListAsync(It.IsAny<string>()))
-            .ReturnsAsync(new ResultListWrapper<UserEntity>().With(OperationStatus.Failure));
+            .ReturnsAsync(new ServiceListResult<UserEntity>().With(OperationStatus.Failure));
 
         // Act
         IActionResult result = await _testee.GetListAsync();
@@ -79,7 +79,7 @@ public class UsersControllerTests
     {
         // Arrange
         _repositoryMock.Setup(x => x.GetAsync(It.IsAny<string>(), Email))
-            .ReturnsAsync(new ResultWrapper<UserEntity>().With(GetTestUserEntity()));
+            .ReturnsAsync(new ServiceResult<UserEntity>().With(GetTestUserEntity()));
 
         // Act
         IActionResult result = await _testee.GetAsync(Email);
@@ -99,7 +99,7 @@ public class UsersControllerTests
     {
         // Arrange
         _repositoryMock.Setup(x => x.GetAsync(It.IsAny<string>(), Email))
-            .ReturnsAsync(new ResultWrapper<UserEntity>().With(OperationStatus.NotFound));
+            .ReturnsAsync(new ServiceResult<UserEntity>().With(OperationStatus.NotFound));
 
         // Act
         IActionResult result = await _testee.GetAsync(Email);
@@ -116,7 +116,7 @@ public class UsersControllerTests
     {
         // Arrange
         _repositoryMock.Setup(x => x.GetAsync(It.IsAny<string>(), Email))
-            .ReturnsAsync(new ResultWrapper<UserEntity>().With(OperationStatus.Failure));
+            .ReturnsAsync(new ServiceResult<UserEntity>().With(OperationStatus.Failure));
 
         // Act
         IActionResult result = await _testee.GetAsync(Email);
@@ -139,10 +139,10 @@ public class UsersControllerTests
         };
 
         _repositoryMock.Setup(x => x.GetAsync(It.IsAny<string>(), Email))
-            .ReturnsAsync(new ResultWrapper<UserEntity>().With(OperationStatus.NotFound));
+            .ReturnsAsync(new ServiceResult<UserEntity>().With(OperationStatus.NotFound));
 
         _repositoryMock.Setup(x => x.CreateAsync(It.IsAny<UserEntity>()))
-            .ReturnsAsync(new ResultWrapper<UserEntity>().With(GetTestUserEntity()));
+            .ReturnsAsync(new ServiceResult<UserEntity>().With(GetTestUserEntity()));
 
         // Act
         IActionResult result = await _testee.CreateAsync(request);
@@ -168,7 +168,7 @@ public class UsersControllerTests
         };
 
         _repositoryMock.Setup(x => x.GetAsync(It.IsAny<string>(), Email))
-            .ReturnsAsync(new ResultWrapper<UserEntity>().With(OperationStatus.Success));
+            .ReturnsAsync(new ServiceResult<UserEntity>().With(OperationStatus.Success));
 
         // Act
         IActionResult result = await _testee.CreateAsync(request);
@@ -193,7 +193,7 @@ public class UsersControllerTests
         };
 
         _repositoryMock.Setup(x => x.GetAsync(It.IsAny<string>(), Email))
-            .ReturnsAsync(new ResultWrapper<UserEntity>().With(OperationStatus.Failure));
+            .ReturnsAsync(new ServiceResult<UserEntity>().With(OperationStatus.Failure));
 
         // Act
         IActionResult result = await _testee.CreateAsync(request);
@@ -218,7 +218,7 @@ public class UsersControllerTests
         };
 
         _repositoryMock.Setup(x => x.GetAsync(It.IsAny<string>(), Email))
-            .ReturnsAsync(new ResultWrapper<UserEntity>().With(OperationStatus.Failure));
+            .ReturnsAsync(new ServiceResult<UserEntity>().With(OperationStatus.Failure));
 
         // Act
         IActionResult result = await _testee.CreateAsync(request);
@@ -243,10 +243,10 @@ public class UsersControllerTests
         };
 
         _repositoryMock.Setup(x => x.GetAsync(It.IsAny<string>(), Email))
-            .ReturnsAsync(new ResultWrapper<UserEntity>().With(GetTestUserEntity()));
+            .ReturnsAsync(new ServiceResult<UserEntity>().With(GetTestUserEntity()));
 
-        _repositoryMock.Setup(x => x.Update(Email, entityToUpdateETag, It.IsAny<UserEntity>()))
-            .ReturnsAsync(new ResultWrapper<UserEntity>().With(GetTestUserEntity()));
+        _repositoryMock.Setup(x => x.UpdateAsync(Email, entityToUpdateETag, It.IsAny<UserEntity>()))
+            .ReturnsAsync(new ServiceResult<UserEntity>().With(GetTestUserEntity()));
 
         // Act
         IActionResult result = await _testee.UpdateAsync(Email, request);
@@ -272,10 +272,10 @@ public class UsersControllerTests
         };
 
         _repositoryMock.Setup(x => x.GetAsync(It.IsAny<string>(), Email))
-            .ReturnsAsync(new ResultWrapper<UserEntity>().With(GetTestUserEntity()));
+            .ReturnsAsync(new ServiceResult<UserEntity>().With(GetTestUserEntity()));
 
-        _repositoryMock.Setup(x => x.Update(Email, It.IsAny<ETag>(), It.IsAny<UserEntity>()))
-            .ReturnsAsync(new ResultWrapper<UserEntity>().With(GetTestUserEntity(), OperationStatus.UniqueConstraintViolation));
+        _repositoryMock.Setup(x => x.UpdateAsync(Email, It.IsAny<ETag>(), It.IsAny<UserEntity>()))
+            .ReturnsAsync(new ServiceResult<UserEntity>().With(GetTestUserEntity(), OperationStatus.UniqueConstraintViolation));
 
         // Act
         IActionResult result = await _testee.UpdateAsync(Email, request);
@@ -298,7 +298,7 @@ public class UsersControllerTests
         };
 
         _repositoryMock.Setup(x => x.GetAsync(It.IsAny<string>(), Email))
-            .ReturnsAsync(new ResultWrapper<UserEntity>().With(OperationStatus.Failure));
+            .ReturnsAsync(new ServiceResult<UserEntity>().With(OperationStatus.Failure));
 
         // Act
         IActionResult result = await _testee.UpdateAsync(Email, request);
@@ -317,10 +317,10 @@ public class UsersControllerTests
         var entityToDelete = GetTestUserEntity();
 
         _repositoryMock.Setup(x => x.GetAsync(It.IsAny<string>(), Email))
-            .ReturnsAsync(new ResultWrapper<UserEntity>().With(entityToDelete));
+            .ReturnsAsync(new ServiceResult<UserEntity>().With(entityToDelete));
 
         _repositoryMock.Setup(x => x.DeleteAsync(entityToDelete))
-            .ReturnsAsync(new ResultWrapper<UserEntity>().With(OperationStatus.Success));
+            .ReturnsAsync(new ServiceResult<UserEntity>().With(OperationStatus.Success));
 
         // Act
         IActionResult result = await _testee.Delete(Email);
@@ -334,7 +334,7 @@ public class UsersControllerTests
     {
         // Arrange
         _repositoryMock.Setup(x => x.GetAsync(It.IsAny<string>(), Email))
-            .ReturnsAsync(new ResultWrapper<UserEntity>().With(OperationStatus.NotFound));
+            .ReturnsAsync(new ServiceResult<UserEntity>().With(OperationStatus.NotFound));
 
         // Act
         IActionResult result = await _testee.Delete(Email);
@@ -351,7 +351,7 @@ public class UsersControllerTests
     {
         // Arrange
         _repositoryMock.Setup(x => x.GetAsync(It.IsAny<string>(), Email))
-            .ReturnsAsync(new ResultWrapper<UserEntity>().With(OperationStatus.Failure));
+            .ReturnsAsync(new ServiceResult<UserEntity>().With(OperationStatus.Failure));
 
         // Act
         IActionResult result = await _testee.Delete(Email);
