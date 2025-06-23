@@ -19,13 +19,11 @@ namespace ActivityRegistrator.API.Controllers;
 [Route("[controller]")]
 public class UsersController : ControllerBase
 {
-    private readonly ILogger<UsersController> _logger;
     private readonly IUserService _userService;
     private readonly IMapper _mapper;
 
-    public UsersController(ILogger<UsersController> logger, IUserService userService, IMapper mapper)
+    public UsersController(IUserService userService, IMapper mapper)
     {
-        _logger = logger;
         _userService = userService;
         _mapper = mapper;
     }
@@ -40,8 +38,8 @@ public class UsersController : ControllerBase
             return StatusCode((int) HttpStatusCode.InternalServerError);
         }
 
-        return Ok(new ResponseListDto<UserDto>(
-            records: _mapper.Map<IEnumerable<UserDto>>(response.Values),
+        return Ok(new ResponseListDto<UserDto>( // can be dynamic?
+            records: response.Values!,
             count: response.Count));
     }
 
@@ -52,7 +50,7 @@ public class UsersController : ControllerBase
 
         return response.Status switch
         {
-            OperationStatus.Success => Ok(_mapper.Map<UserDto>(response.Value)),
+            OperationStatus.Success => Ok(response.Value),
             OperationStatus.NotFound => NotFound(ErrorBuilder.NotFoundError(new Dictionary<string, object>() {
                 { "email", email }
             })),
@@ -73,7 +71,7 @@ public class UsersController : ControllerBase
 
         return response.Status switch
         {
-            OperationStatus.Success => CreatedAtAction(nameof(CreateAsync), _mapper.Map<UserDto>(response.Value)),
+            OperationStatus.Success => CreatedAtAction(nameof(CreateAsync), response.Value),
             OperationStatus.UniqueConstraintViolation => Conflict(
                 ErrorBuilder.AlreadyExistsError(new Dictionary<string, object>() { { "Email", requestDto.Email }
             })),
@@ -96,8 +94,7 @@ public class UsersController : ControllerBase
         {
             OperationStatus.Success => Ok(_mapper.Map<UserDto>(response.Value)),
             OperationStatus.UniqueConstraintViolation => PreconditionFailed(ErrorBuilder.AlreadyUpdatedError(new Dictionary<string, object>() {
-                                { "RequestETag", requestDto.ETag },
-                                { "DatabaseEntityEtag", response.Value!.ETag }
+                                { "RequestETag", requestDto.ETag }
             })),
             _ => StatusCode((int) HttpStatusCode.InternalServerError)
         };

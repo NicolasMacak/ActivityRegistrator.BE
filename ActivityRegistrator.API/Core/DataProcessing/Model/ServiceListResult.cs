@@ -7,11 +7,11 @@ namespace ActivityRegistrator.API.Core.DataProcessing.Model;
 /// <typeparam name="T"></typeparam>
 public class ServiceListResult<T>
 {
-    public List<T>? Values { get; set; }
+    public IEnumerable<IDto>? Values { get; set; }
     public OperationStatus Status { get; set; }
     public int Count { get; set; } = 0;
 
-    public ServiceListResult<T> With(List<T> values)
+    public ServiceListResult<T> With(List<IDto> values)
     {
         Values = values;
         Status = OperationStatus.Success;

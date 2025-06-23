@@ -1,7 +1,7 @@
 ﻿using Azure;
 
 namespace ActivityRegistrator.Models.Dtoes;
-public class UserDto
+public class UserDto : IDto
 {   
     public string TenantName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;

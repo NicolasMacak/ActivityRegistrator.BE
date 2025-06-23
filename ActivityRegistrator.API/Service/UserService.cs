@@ -32,7 +32,7 @@ public class UserService : IUserService // TenantAdmin service
 
             return new ServiceListResult<UserEntity>
             {
-                Values = userEntities,
+                Values = userEntities.Select(x => x.ToDto()),
                 Count = userEntities.Count,
                 Status = OperationStatus.Success
             };
@@ -53,7 +53,7 @@ public class UserService : IUserService // TenantAdmin service
             Option<UserEntity> optionUser = await _userRepository.GetAsync(_activeUserService.TenantCode, email);
 
             return optionUser.Match(
-                some: user => new ServiceResult<UserEntity>().With(user),
+                some: user => new ServiceResult<UserEntity>().With(user.ToDto()),
                 none: () => new ServiceResult<UserEntity>().With(OperationStatus.NotFound)
             );
         }
@@ -90,7 +90,7 @@ public class UserService : IUserService // TenantAdmin service
             Option<UserEntity> createdUser = await _userRepository.GetAsync(_activeUserService.TenantCode, requestDto.Email);
 
             return createdUser.Match(
-                some: user => new ServiceResult<UserEntity>().With(user),
+                some: user => new ServiceResult<UserEntity>().With(user.ToDto()),
                 none: () => new ServiceResult<UserEntity>().With(OperationStatus.Failure)
             );
         }
@@ -123,7 +123,7 @@ public class UserService : IUserService // TenantAdmin service
 
             Option<UserEntity> updatedUser = await _userRepository.GetAsync(_activeUserService.TenantCode, email);
 
-            return new ServiceResult<UserEntity>().With(updatedUser.ValueOrFailure());
+            return new ServiceResult<UserEntity>().With(updatedUser.ValueOrFailure().ToDto());
         }
         catch (RequestFailedException requestFailedException)
         {

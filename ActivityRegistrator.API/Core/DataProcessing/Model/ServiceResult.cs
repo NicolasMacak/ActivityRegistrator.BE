@@ -6,10 +6,10 @@ namespace ActivityRegistrator.API.Core.DataProcessing.Model;
 /// <typeparam name="T"></typeparam>
 public class ServiceResult<T>
 {
-    public T? Value { get; private set; }
+    public IDto? Value { get; private set; }
     public OperationStatus Status { get; private set; }
 
-    public ServiceResult<T> With(T value, OperationStatus status)
+    public ServiceResult<T> With(IDto value, OperationStatus status)
     {
         Value = value;
         Status = status;
@@ -17,7 +17,7 @@ public class ServiceResult<T>
         return this;
     }
 
-    public ServiceResult<T> With(T value)
+    public ServiceResult<T> With(IDto value)
     {
         Value = value;
         Status = OperationStatus.Success;
