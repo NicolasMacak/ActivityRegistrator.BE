@@ -1,20 +1,64 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/27.0.9 Chrome/134.0.6998.205 Electron/35.4.0 Safari/537.36" version="27.0.9">
   <diagram name="Page-1" id="jL9D18bYieD4nd3QqH_D">
-    <mxGraphModel dx="690" dy="627" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1052" dy="816" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="trZj9BtUewbr66JKDjCB-2" value="Todo&lt;br&gt;&amp;nbsp;- Application access scope&lt;div&gt;- vyskusat secrest&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-          <mxGeometry x="35" y="43" width="170" height="60" as="geometry" />
+        <mxCell id="trZj9BtUewbr66JKDjCB-2" value="&lt;br&gt;- repository vracia entitu&lt;br&gt;- Vyskusat oneOf&lt;div&gt;- try catch do service&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="50" y="50" width="150" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="trZj9BtUewbr66JKDjCB-3" value="&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;Transient ActiveUserService&lt;/span&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="160" y="120" width="180" height="50" as="geometry" />
+        <mxCell id="JpqUlyx_sCROle91H6DX-1" value="Todo Repository refactor" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=20;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="40" y="10" width="240" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="trZj9BtUewbr66JKDjCB-4" value="" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="370" y="53" width="180" height="40" as="geometry" />
+        <mxCell id="JpqUlyx_sCROle91H6DX-22" value="Controller" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="260" y="730" width="290" height="220" as="geometry" />
         </mxCell>
-        <mxCell id="trZj9BtUewbr66JKDjCB-5" value="Post some role with role to db" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-          <mxGeometry x="40" y="208" width="180" height="30" as="geometry" />
+        <mxCell id="JpqUlyx_sCROle91H6DX-17" value="ControllerMethod" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="JpqUlyx_sCROle91H6DX-22">
+          <mxGeometry x="30" y="65" width="120" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="JpqUlyx_sCROle91H6DX-18" value="[Authorize(Policy = UserAccessLevelPolicy)]" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="JpqUlyx_sCROle91H6DX-22">
+          <mxGeometry x="100" y="55" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="JpqUlyx_sCROle91H6DX-23" value="EndpointAccessHandler : AuthorizationHandler&amp;lt;EndpointRequirement&amp;gt;" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" vertex="1" parent="1">
+          <mxGeometry x="50" y="500" width="480" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="JpqUlyx_sCROle91H6DX-30" value="AuthorizedUserAccessLevel" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="JpqUlyx_sCROle91H6DX-23">
+          <mxGeometry x="20" y="75" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="JpqUlyx_sCROle91H6DX-31" value="EpRequiredAccessLevel" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="JpqUlyx_sCROle91H6DX-23">
+          <mxGeometry x="270" y="75" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="JpqUlyx_sCROle91H6DX-34" value="&amp;gt;=" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontStyle=1;fontSize=30;" vertex="1" parent="JpqUlyx_sCROle91H6DX-23">
+          <mxGeometry x="200" y="70" width="60" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="JpqUlyx_sCROle91H6DX-3" value="Enum&amp;lt;&amp;lt;AccessLevel&amp;gt;&amp;gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="300" width="170" height="190" as="geometry">
+            <mxRectangle x="220" y="370" width="60" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JpqUlyx_sCROle91H6DX-4" value="Root = 4" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="JpqUlyx_sCROle91H6DX-3">
+          <mxGeometry y="30" width="170" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="JpqUlyx_sCROle91H6DX-5" value="TenantAdmin = 3" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="JpqUlyx_sCROle91H6DX-3">
+          <mxGeometry y="60" width="170" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="JpqUlyx_sCROle91H6DX-6" value="DelegatedAdmin = 2" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="JpqUlyx_sCROle91H6DX-3">
+          <mxGeometry y="90" width="170" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="JpqUlyx_sCROle91H6DX-14" value="User = 1" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="JpqUlyx_sCROle91H6DX-3">
+          <mxGeometry y="130" width="170" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="JpqUlyx_sCROle91H6DX-15" value="Guest = 0" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="JpqUlyx_sCROle91H6DX-3">
+          <mxGeometry y="160" width="170" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="JpqUlyx_sCROle91H6DX-33" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="JpqUlyx_sCROle91H6DX-27" target="JpqUlyx_sCROle91H6DX-30">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="JpqUlyx_sCROle91H6DX-27" value="Database" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="90" y="750" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="JpqUlyx_sCROle91H6DX-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="JpqUlyx_sCROle91H6DX-18" target="JpqUlyx_sCROle91H6DX-31">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
