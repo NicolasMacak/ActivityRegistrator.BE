@@ -3,7 +3,6 @@ using ActivityRegistrator.API.Service;
 using ActivityRegistrator.Models.Dtoes;
 using ActivityRegistrator.Models.Entities;
 using ActivityRegistrator.Models.Request;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static ActivityRegistrator.API.Core.DataProcessing.Builders.ObjectResultBuilder;
@@ -20,12 +19,10 @@ namespace ActivityRegistrator.API.Controllers;
 public class UsersController : ControllerBase
 {
     private readonly IUserService _userService;
-    private readonly IMapper _mapper;
 
-    public UsersController(IUserService userService, IMapper mapper)
+    public UsersController(IUserService userService)
     {
         _userService = userService;
-        _mapper = mapper;
     }
 
     [HttpGet]
@@ -92,7 +89,7 @@ public class UsersController : ControllerBase
 
         return response.Status switch
         {
-            OperationStatus.Success => Ok(_mapper.Map<UserDto>(response.Value)),
+            OperationStatus.Success => Ok(response.Value),
             OperationStatus.UniqueConstraintViolation => PreconditionFailed(ErrorBuilder.AlreadyUpdatedError(new Dictionary<string, object>() {
                                 { "RequestETag", requestDto.ETag }
             })),
